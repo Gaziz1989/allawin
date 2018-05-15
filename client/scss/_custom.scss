@@ -1,0 +1,49 @@
+// Here you can add other styles
+input {
+	width: 83%;
+}
+.modalInput {
+	width: 83%;
+}
+.tableActionbtn {
+	border-radius: 50%;
+	background-color: transparent;
+	margin-left: 23px;
+}
+.logoutBtn {
+	background-color: #29363d;
+	font-size: 1.2em;
+	color: #536c79;
+	padding: 8px 5px 8px 0;
+}
+.logoutBtn:hover {
+	color: #fff;
+	background-color: #3ca8d8;
+}
+.card-header {
+	border: 1px solid #c2cfd6;
+	display: block;
+	height: 3.5em;
+}
+.card-header > h5 {
+	display: inline-block;
+	width: 97%;
+}
+.tableColBtn {
+	display: inline-block;
+	width: 3%;
+}
+.tableColBtn > button {
+	padding: 0;
+	width: 100%;
+	border-radius: 50%;
+	height: 100%;
+	font-size: 1.7em;
+	color: #7d98ad;
+	border: 0px;
+	background-color: transparent;
+	outline: none;
+}
+.error {
+	color: red;
+}
