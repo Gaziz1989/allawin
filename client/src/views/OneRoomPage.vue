@@ -1,27 +1,39 @@
 <template>
 	<div class="mainInfo">
-    <h5>Комнаты</h5>
-    <div class="rooms" v-for="(room, index) in rooms">
-      <span class="room" @click="choose(room)">{{index}} : {{room.id}}</span>
-    </div>
+        <h5>Комната: {{this.room ? this.room.id : this.room}}</h5>
+        <div class="chat">
+          <div class="messages" v-for="(message, index) in messages">
+            <span :class="smsclass(message)">{{message.from ? message.from.email : message.fromId}} : {{message.text}}</span>
+          </div>
+          <div class="sending">
+            <input type="text" name="text" class="sendInput" v-model="message">
+            <button @click="createMessage" :class="buttonclass" :disabled="disabled">Send</button>
+          </div>
+        </div>
   </div>
 </template>
 
 <script>
-  import RoomsService from '@/services/RoomsService'
+  import MessagesService from '@/services/MessagesService'
   export default {
-    name: 'RoomsPage',
+    name: 'OneRoomPage',
     components: {},
     data () {
       return {
-        isConnected: false,
-        rooms: []
+        room: ' ',
+        messages: [],
+        message: ''
       }
     },
     async beforeMount () {
       try {
-        let response = await RoomsService.getrooms()
-        this.rooms = response.data.myrooms
+        if (!this.$route.params.room) {
+          this.$router.go(-1)
+        }
+        this.room = this.$route.params.room
+        this.$socket.emit('join', this.room)
+        let response = await MessagesService.getmessages(this.$route.params.room)
+        this.messages = response.data.messages
       } catch (error) {
         console.log(error)
       }
@@ -43,14 +55,31 @@
       }
     },
     methods: {
-      async choose (_item) {
-        this.room = _item
-        this.$router.push({
-          name: 'OneRoomPage',
-          params: {
-            room: _item
-          }
-        })
+      smsclass (_item) {
+        if (_item.fromId === this.$auth.currentUser().id) {
+          return 'mysms'
+        } else {
+          return 'message'
+        }
+      },
+      async createMessage () {
+        try {
+          await this.$socket.emit('createMessage', ({
+            message: this.message,
+            room: this.room
+          }))
+          this.message = ''
+        } catch (error) {
+          console.log(error)
+        }
+      }
+    },
+    sockets: {
+      updateUserList () {
+
+      },
+      newMessage (msg) {
+        this.messages.push(msg)
       }
     }
   }
@@ -69,46 +98,25 @@
     border-radius: 1px;
   	margin-bottom: 3em;
   }
-  .rooms {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  .room {
-    width: 100%;
-    text-align: center;
-  }
-  .room:hover {
-    background: grey;
-  }
   .chat {
-    position: absolute;
-    bottom: 5.5%;
-    right: 0;
-    display: none;
+    display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     border: 1px solid black;
     border-radius: 10px;
-    width: 300px;
+    width: 100%;
     height: 450px;
   }
   .messages {
     width: 100%;
     height: 100%;
-    padding: 15px;
-    overflow: auto;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-start;
   }
   .message {
-    width: 100%;
-    text-align: center;
   }
   .mysms {
     align-self: flex-end;

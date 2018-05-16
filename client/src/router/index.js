@@ -8,6 +8,7 @@ import Full from '@/containers/Full'
 // Views
 import MainPage from '@/views/MainPage'
 import RoomsPage from '@/views/RoomsPage'
+import OneRoomPage from '@/views/OneRoomPage'
 
 // Pages
 import Greetings from '@/pages/GreetingsPage'
@@ -38,6 +39,11 @@ export default new Router({
           path: '/roomspage',
           name: 'RoomsPage',
           component: Auth().isLoggedIn() ? RoomsPage : Greetings
+        },
+        {
+          path: '/oneroompage',
+          name: 'OneRoomPage',
+          component: Auth().isLoggedIn() ? OneRoomPage : Greetings
         }
       ]
     }

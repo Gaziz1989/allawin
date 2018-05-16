@@ -24,6 +24,8 @@
 </template>
 
 <script>
+  import UsersService from '@/services/UsersService'
+  import RoomsService from '@/services/RoomsService'
   export default {
     name: 'MainPage',
     components: {},
@@ -37,9 +39,16 @@
         message: ''
       }
     },
-    beforeMount () {
+    async beforeMount () {
       try {
-        this.$socket.emit('getusers')
+        let response = await UsersService.getusers()
+        response.data.users.map(item => {
+          if (item.type === 'user') {
+            this.users.push(item)
+          } else {
+            this.pros.push(item)
+          }
+        })
       } catch (error) {
         console.log(error)
       }
@@ -54,27 +63,12 @@
       },
       async createroom () {
         try {
-          await this.$socket.emit('createroom', ({
-            selected: this.selected,
-            token: this.$auth.getToken()
-          }))
+          let response = await RoomsService.createroom(this.selected)
+          console.log(response)
+          alert(response.data.message)
         } catch (error) {
           console.log(error)
         }
-      }
-    },
-    sockets: {
-      connect () {},
-      getusers (_data) {
-        _data.users.map(item => {
-          if (item.type === 'user') {
-            this.users.push(item)
-          } else {
-            this.pros.push(item)
-          }
-        })
-      },
-      createroom (_room) {
       }
     }
   }
