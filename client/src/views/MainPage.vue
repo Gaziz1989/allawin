@@ -64,7 +64,6 @@
       async createroom () {
         try {
           let response = await RoomsService.createroom(this.selected)
-          console.log(response)
           alert(response.data.message)
         } catch (error) {
           console.log(error)

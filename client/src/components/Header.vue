@@ -8,6 +8,11 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="flex">
+      <div class="meeting">
+        <span class="name">
+          <p>{{ this.$auth.currentUser().email }}</p>
+        </span>
+      </div>
     </div>
 <!--     <button class="navbar-toggler aside-menu-toggler d-md-down-none" type="button" @click="asideToggle">
       <span class="navbar-toggler-icon"></span>

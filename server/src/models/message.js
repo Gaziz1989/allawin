@@ -11,7 +11,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: 'unread'
-    }
+    },
+    type: DataTypes.STRING,
+    file: DataTypes.TEXT,
+    preview1: DataTypes.TEXT,
+    preview2: DataTypes.TEXT
   })
   Message.associate = function (models) {
     models.Message.belongsTo(models.User, { as: 'from' })

@@ -3,11 +3,56 @@
         <h5>Комната: {{this.room ? this.room.id : this.room}}</h5>
         <div class="chat">
           <div class="messages" v-for="(message, index) in messages">
-            <span :class="smsclass(message)">{{message.from ? message.from.email : message.fromId}} : {{message.text}}</span>
+            <span :class="smsclass(message) + ' download'"  v-if="message.type === 'file'">
+              <a :href="'http://127.0.0.1:2018' + message.file.replace('/home/mars/MyProjects/allawin/server/static', '')" target='_blank' preload="none" download>{{message.text}}</a>
+            </span>
+            <span :class="smsclass(message) + ' img'"  v-else-if="message.type === 'image'">
+              <img :src="'http://127.0.0.1:2018' + message.preview1.replace('/home/mars/MyProjects/allawin/server/static', '')" alt="Фото" width="180">
+            </span>
+            <span :class="smsclass(message) + ' video'"  v-else-if="message.type === 'video'">
+              <video width="320" height="240" controls>
+                <source :src="'http://127.0.0.1:2018' + message.preview1.replace('/home/mars/MyProjects/allawin/server/static', '')">
+              </video>
+            </span>
+            <span :class="smsclass(message)" v-else>{{message.from ? message.from.email : message.fromId}} : {{message.text}}</span>
           </div>
           <div class="sending">
             <input type="text" name="text" class="sendInput" v-model="message">
             <button @click="createMessage" :class="buttonclass" :disabled="disabled">Send</button>
+          </div>
+        </div>
+        <div class=buttons>
+          <div class="inputforimg">
+            <label title="Загрузить файл" class='uploadlabel'>
+              <div>
+                <span>Файл</span>
+                <input class="imginp" type="file" @change="onFileChange">
+              </div>
+            </label>
+          </div>
+          <div class="inputforimg">
+            <label title="Загрузить видео" class='uploadlabel'>
+              <div>
+                <span>Видео</span>
+                <input class="imginp" type="file" @change="onVideoChange">
+              </div>
+            </label>
+          </div>
+          <div class="inputforimg">
+            <label title="Загрузить аудио" class='uploadlabel'>
+              <div>
+                <span>Аудио</span>
+                <input class="imginp" type="file" @change="onAudioChange">
+              </div>
+            </label>
+          </div>
+          <div class="inputforimg">
+            <label title="Загрузить фото" class='uploadlabel'>
+              <div>
+                <span>Фото</span>
+                <input class="imginp" type="file" @change="onPhotoChange">
+              </div>
+            </label>
           </div>
         </div>
   </div>
@@ -55,6 +100,78 @@
       }
     },
     methods: {
+      onFileChange (event) {
+        var files = event.target.files || event.dataTransfer.files
+        if (!files.length) {
+          return
+        }
+        this.createFile(files[0])
+      },
+      createFile (file) {
+        var reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = (e) => {
+          this.$socket.emit('uploadFile', {
+            file: file,
+            filename: file.name,
+            room: this.room
+          })
+        }
+      },
+      onVideoChange (event) {
+        var files = event.target.files || event.dataTransfer.files
+        if (!files.length) {
+          return
+        }
+        this.createVideo(files[0])
+      },
+      createVideo (file) {
+        var reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = (e) => {
+          this.$socket.emit('uploadVideo', {
+            video: file,
+            filename: file.name,
+            room: this.room
+          })
+        }
+      },
+      onAudioChange (event) {
+        var files = event.target.files || event.dataTransfer.files
+        if (!files.length) {
+          return
+        }
+        this.createAudio(files[0])
+      },
+      createAudio (file) {
+        var reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = (e) => {
+          this.$socket.emit('uploadAudio', {
+            audio: file,
+            filename: file.name,
+            room: this.room
+          })
+        }
+      },
+      onPhotoChange (event) {
+        var files = event.target.files || event.dataTransfer.files
+        if (!files.length) {
+          return
+        }
+        this.createPhoto(files[0])
+      },
+      createPhoto (file) {
+        var reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = (e) => {
+          this.$socket.emit('uploadImage', {
+            photo: file,
+            filename: file.name,
+            room: this.room
+          })
+        }
+      },
       smsclass (_item) {
         if (_item.fromId === this.$auth.currentUser().id) {
           return 'mysms'
@@ -103,14 +220,16 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid black;
     border-radius: 10px;
     width: 100%;
     height: 450px;
   }
   .messages {
     width: 100%;
-    height: 100%;
+    height: 80%;
+    padding: 5px;
+    overflow-y: auto;
+    overflow-x: auto;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -120,6 +239,35 @@
   }
   .mysms {
     align-self: flex-end;
+  }
+  .download {
+    cursor: pointer;
+  }
+  .img {
+    cursor: pointer;
+  }
+  .buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+    width: 100%;
+    height: 450px;
+  }
+  .inputforimg{
+    margin: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  .uploadlabel {
+    border: 1px solid black;
+    background: grey;
+  }
+  .imginp {
+    display: none;
   }
   .sending {
     width: 100%;
