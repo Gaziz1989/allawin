@@ -4,7 +4,6 @@ const request = require('request')
 const config = require('../config/config')
 const appKey = 'b60ce3cf8697fa6d2ef145c429eea815128dc7ca'
 const path = 'https://api.mobizon.com/service/'
-const randomNumber = require("random-number-csprng")
 const mailer = require("../config/mail")
 function jwtSignUser (user) {
   const ONE_WEEK = 60 * 60 * 24 * 1000

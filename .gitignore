@@ -1,2 +1,8 @@
 client/node_modules/
 server/node_modules/
+server/static/icons
+server/static/transferedaudios
+server/static/transferedfiles
+server/static/transferedimages
+server/static/transferedvideos
+server/static/user-img

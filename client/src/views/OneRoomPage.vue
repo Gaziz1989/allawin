@@ -4,15 +4,20 @@
         <div class="chat">
           <div class="messages" v-for="(message, index) in messages">
             <span :class="smsclass(message) + ' download'"  v-if="message.type === 'file'">
-              <a :href="'http://127.0.0.1:2018' + message.file.replace('/home/mars/MyProjects/allawin/server/static', '')" target='_blank' preload="none" download>{{message.text}}</a>
+              <a :href="message.file" target='_blank' preload="none" download>{{message.text}}</a>
             </span>
             <span :class="smsclass(message) + ' img'"  v-else-if="message.type === 'image'">
-              <img :src="'http://127.0.0.1:2018' + message.preview1.replace('/home/mars/MyProjects/allawin/server/static', '')" alt="Фото" width="180">
+              <img :src="message.preview1" alt="Фото" width="180">
             </span>
             <span :class="smsclass(message) + ' video'"  v-else-if="message.type === 'video'">
               <video width="320" height="240" controls>
-                <source :src="'http://127.0.0.1:2018' + message.preview1.replace('/home/mars/MyProjects/allawin/server/static', '')">
+                <source :src="message.preview2">
               </video>
+            </span>
+            <span :class="smsclass(message) + ' audio'"  v-else-if="message.type === 'audio'">
+              <audio controls>
+                <source :src="message.file">
+              </audio>
             </span>
             <span :class="smsclass(message)" v-else>{{message.from ? message.from.email : message.fromId}} : {{message.text}}</span>
           </div>
@@ -244,6 +249,12 @@
     cursor: pointer;
   }
   .img {
+    cursor: pointer;
+  }
+  .video {
+    cursor: pointer;
+  }
+  .audio {
     cursor: pointer;
   }
   .buttons {

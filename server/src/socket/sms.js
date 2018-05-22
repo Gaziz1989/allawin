@@ -6,7 +6,40 @@ const users = new Users()
 const path = require('path')
 const sharp = require('sharp')
 const ffmpeg = require('ffmpeg')
-const randomNumber = require("random-number-csprng")
+const uuidv4 = require('uuid/v4')
+
+const AWS = require('aws-sdk')
+const spacesEndpoint = new AWS.Endpoint('nyc3.digitaloceanspaces.com')
+const s3 = new AWS.S3({
+    endpoint: spacesEndpoint,
+    accessKeyId: '7EPP3JFIRC4EHZY3VVDO',
+    secretAccessKey: 'JYLFXgCTusmGtGIh+qO74h/h598bKnTqC71E0gHjlCM'
+})
+
+let readFilePro = function (filename){
+  return new Promise(function (resolve, reject) {
+    fs.readFile(filename, (err, data) => {
+      if(err) reject(err);
+      resolve(new Buffer(data, 'binary'))
+    })
+  })
+}
+let uploadFile = function (_name, _bufer) {
+	return new Promise (function (resolve, reject) {
+		s3.upload({
+			Bucket: 'allawin-chats',
+			Key: _name,
+			Body: _bufer,
+			ACL: "public-read"
+		}, function (error, data) {
+			if (error) {
+				console.log(error)
+			} else {
+				resolve(data)
+			}
+		})
+	})
+}
 
 module.exports = (io) => {
 
@@ -63,18 +96,22 @@ module.exports = (io) => {
 				}
 			})
 
-			socket.on('uploadFile', async (file) => {
+			socket.on('uploadFile', (file) => {
 				try {
-					const filepath = path.join(__dirname, `../../static/transferedfiles/${new Date().getTime()}_` + file.filename)
-					fs.writeFile(filepath, file.file, (error) => {
-						if (error) {
-							console.log(error)
-						}
-						Message.create({
+					const _length = file.filename.split('.').length
+					const extension = file.filename.split('.')[_length - 1]
+					s3.upload({
+						Bucket: 'allawin-chats',
+						Key: `${uuidv4().split('-').join('')}.${extension}`,
+						Body: file.file,
+						ACL: "public-read"
+					}, function(err, data) {
+						console.log(data)
+  						Message.create({
 							text: file.filename,
 							fromId: socket.user.id,
 							roomId: file.room.id,
-							file: filepath,
+							file: `https://${data.Location}/${data.Key}`,
 							type: 'file'
 						}).then(async created => {
 							let message = await Message.findOne({
@@ -98,61 +135,122 @@ module.exports = (io) => {
 				}
 			})
 
-			socket.on('uploadVideo', async (file) => {
+			socket.on('uploadVideo', (file) => {
 				try {
 					const _length = file.filename.split('.').length
 					const extension = file.filename.split('.')[_length - 1]
-					const randomnumber = await randomNumber(999999, 999999999)
-					const filepath = path.join(__dirname, `../../static/transferedvideos/${new Date().getTime()}_${randomnumber}.${extension}`)
-					const previewpath1 = path.join(__dirname, `../../static/transferedvideos/previews/600_${new Date().getTime()}_${randomnumber}.${extension}`)
-					const previewpath2 = path.join(__dirname, `../../static/transferedvideos/previews/300_${new Date().getTime()}_${randomnumber}.${extension}`)
-
-					await fs.writeFile(filepath, file.video, async (error) => {
+					let name = `${uuidv4().split('-').join('')}.${extension}`
+					const filepath = path.join(__dirname, `../../static/transferedvideos/${name}`)
+					const _previewpath1 = path.join(__dirname, `../../static/transferedvideos/previews/600_${name}`)
+					const _previewpath2 = path.join(__dirname, `../../static/transferedvideos/previews/300_${name}`)
+					fs.writeFile(filepath, file.video, async (error) => {
 						if (error) {
 							console.log(error)
 						} else {
-							const compressor = new ffmpeg(filepath)
-
-							await compressor.then((video) => {
-								let preview600 = video
-								let preview300 = video
-								preview600.setVideoSize('600x400', true, false).save(previewpath1)
-								preview300.setVideoSize('300x200', true, false).save(previewpath2)
+							new Promise (function (resolve, reject){
+								const compressor = new ffmpeg(filepath)
+								compressor.then(async (video) => {
+									let preview600 = video
+									let preview300 = video
+									await preview600.setVideoSize('600x400', true, false).save(_previewpath1)
+									await preview300.setVideoSize('300x200', true, false).save(_previewpath2)
+									resolve({
+										_previewpath1, _previewpath2
+									})
+								})
+							}).then(async data => {
+								let previewpath = await readFilePro(filepath)
+								let previewpath1 = await readFilePro(data._previewpath1)
+								let previewpath2 = await readFilePro(data._previewpath2)
+								return ({
+									previewpath, previewpath1, previewpath2
+								})
+							}).then(async data => {
+								let big = await uploadFile(name, data.previewpath)
+								let middle = await uploadFile('600_' + name, data.previewpath1)
+								let small = await uploadFile('300_' + name, data.previewpath2)
+		  						Message.create({
+									text: file.filename,
+									fromId: socket.user.id,
+									roomId: file.room.id,
+									file: `https://${big.Location}/${big.Key}`,
+								    preview1: `https://${middle.Location}/${middle.Key}`,
+								    preview2: `https://${small.Location}/${small.Key}`,
+									type: 'video'
+								}).then(async created => {
+									let message = await Message.findOne({
+										where: {
+						                    id: created.id
+						                },
+						                include: [
+						                    {
+						                        model: User,
+						                        as: 'from'
+						                    }
+						                ]
+									})
+									delete message.toJSON().from.token
+									delete message.toJSON().from.password
+									io.to(file.room.id).emit('newMessage', message.toJSON())
+									fs.unlink(filepath, (error) => {
+										if (error) {
+											console.log(error)
+										}
+									})
+									fs.unlink(_previewpath1, (error) => {
+										if (error) {
+											console.log(error)
+										}
+									})
+									fs.unlink(_previewpath2, (error) => {
+										if (error) {
+											console.log(error)
+										}
+									})
+								})
+							}).catch(error => {
+								console.log(error)
 							})
 						}
-					})
-					await Message.create({
-						text: file.filename,
-						fromId: socket.user.id,
-						roomId: file.room.id,
-						file: filepath,
-						preview1: previewpath1,
-						preview2: previewpath2,
-						type: 'video'
-					}).then(async created => {
-						let message = await Message.findOne({
-							where: {
-			                    id: created.id
-			                },
-			                include: [
-			                    {
-			                        model: User,
-			                        as: 'from'
-			                    }
-			                ]
-						})
-						delete message.toJSON().from.token
-						delete message.toJSON().from.password
-						io.to(file.room.id).emit('newMessage', message.toJSON())
 					})
 				} catch (error) {
 					console.log(error)
 				}
 			})
 
-			socket.on('uploadAudio', async (file) => {
+			socket.on('uploadAudio', (file) => {
 				try {
-					console.log(file)
+					const _length = file.filename.split('.').length
+					const extension = file.filename.split('.')[_length - 1]
+					s3.upload({
+						Bucket: 'allawin-chats',
+						Key: `${uuidv4().split('-').join('')}.${extension}`,
+						Body: file.audio,
+						ACL: 'public-read'
+					}, function(err, data) {
+  						Message.create({
+							text: file.filename,
+							fromId: socket.user.id,
+							roomId: file.room.id,
+							file: `https://${data.Location}/${data.Key}`,
+							type: 'audio'
+						}).then(async created => {
+							let message = await Message.findOne({
+								where: {
+				                    id: created.id
+				                },
+				                include: [
+				                    {
+				                        model: User,
+				                        as: 'from'
+				                    }
+				                ]
+							})
+							delete message.toJSON().from.token
+							delete message.toJSON().from.password
+							io.to(file.room.id).emit('newMessage', message.toJSON())
+						})
+					})
 				} catch (error) {
 					console.log(error)
 				}
@@ -160,21 +258,25 @@ module.exports = (io) => {
 
 			socket.on('uploadImage', async (file) => {
 				try {
-					const filepath = path.join(__dirname, `../../static/transferedimages/${new Date().getTime()}_` + file.filename)
-					const previewpath1 = path.join(__dirname, `../../static/transferedimages/previews/600_${new Date().getTime()}_` + file.filename)
-					const previewpath2 = path.join(__dirname, `../../static/transferedimages/previews/300_${new Date().getTime()}_` + file.filename)
+					const _length = file.filename.split('.').length
+					const extension = file.filename.split('.')[_length - 1]
+					let name = `${uuidv4().split('-').join('')}.${extension}`
 
-					await sharp(file.photo).resize(1200, null).toFile(filepath)
-					await sharp(file.photo).resize(600, null).toFile(previewpath1)
-					await sharp(file.photo).resize(300, null).toFile(previewpath2)
+					let previewpath = await sharp(file.photo).resize(1200, null).toBuffer()
+					let previewpath1 = await sharp(file.photo).resize(600, null).toBuffer()
+					let previewpath2 = await sharp(file.photo).resize(300, null).toBuffer()
+
+					let big = await uploadFile(name, previewpath)
+					let middle = await uploadFile('600_' + name, previewpath1)
+					let small = await uploadFile('300_' + name, previewpath2)
 
 					await Message.create({
 						text: file.filename,
 						fromId: socket.user.id,
 						roomId: file.room.id,
-						file: filepath,
-						preview1: previewpath1,
-						preview2: previewpath2,
+						file: big.Location,
+					    preview1: middle.Location,
+					    preview2: small.Location,
 						type: 'image'
 					}).then(async created => {
 						let message = await Message.findOne({
