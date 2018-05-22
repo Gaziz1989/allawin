@@ -8,6 +8,14 @@ const saveToken = token => {
   window.localStorage['token'] = token
 }
 
+const saveTwillioToken = token => {
+  window.localStorage['twilliotoken'] = token
+}
+
+const getTwillioToken = () => {
+  return window.localStorage['twilliotoken']
+}
+
 const isLoggedIn = () => {
   const token = getToken()
   let payload
@@ -29,6 +37,7 @@ const currentUser = () => {
 const logout = () => {
   return new Promise((resolve, reject) => {
     window.localStorage.removeItem('token')
+    window.localStorage.removeItem('twilliotoken')
     resolve(true)
   })
 }
@@ -36,9 +45,11 @@ const logout = () => {
 export default () => {
   return {
     getToken,
+    getTwillioToken,
     isLoggedIn,
     logout,
     currentUser,
-    saveToken
+    saveToken,
+    saveTwillioToken
   }
 }

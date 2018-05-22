@@ -106,7 +106,6 @@ module.exports = (io) => {
 						Body: file.file,
 						ACL: "public-read"
 					}, function(err, data) {
-						console.log(data)
   						Message.create({
 							text: file.filename,
 							fromId: socket.user.id,

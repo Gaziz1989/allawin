@@ -8,5 +8,8 @@ export default {
   downloadfile (_msg) {
     const formData = `msg=${JSON.stringify(_msg)}`
     return Api().post('downloadfile', formData)
+  },
+  gettwiliotoken () {
+    return Api().get('gettwilliotoken')
   }
 }

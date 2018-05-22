@@ -2,8 +2,34 @@ const { User, Message } = require('../models')
 const fs = require('fs')
 const path = require('path')
 var mime = require('mime')
+const AccessToken = require('twilio').jwt.AccessToken
+const VideoGrant = AccessToken.VideoGrant
+require('dotenv').load()
 
 module.exports = {
+    async gettwiliotoken (req, res) {
+        try {
+            let token = new AccessToken(
+                process.env.TWILIO_ACCOUNT_SID,
+                process.env.TWILIO_API_KEY,
+                process.env.TWILIO_API_SECRET
+            )
+            token.identity = req.user.email
+
+            let grant = new VideoGrant()
+            token.addGrant(grant)
+
+            res.send({
+                identity: req.user.email,
+                token: token.toJwt()
+            })
+        } catch (error) {
+            console.log(error)
+            res.status(500).send({
+              error: 'Произошла ошибка на сервере!'
+            })
+        }
+    },
 	async getmessages (req, res) {
 		try {
             let room = JSON.parse(req.body.room)

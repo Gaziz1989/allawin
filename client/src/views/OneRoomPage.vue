@@ -83,6 +83,8 @@
         this.room = this.$route.params.room
         this.$socket.emit('join', this.room)
         let response = await MessagesService.getmessages(this.$route.params.room)
+        let response1 = await MessagesService.gettwiliotoken()
+        this.$auth.saveTwillioToken(response1.data.token)
         this.messages = response.data.messages
       } catch (error) {
         console.log(error)
@@ -105,6 +107,9 @@
       }
     },
     methods: {
+      leaving () {
+        console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++114')
+      },
       onFileChange (event) {
         var files = event.target.files || event.dataTransfer.files
         if (!files.length) {
