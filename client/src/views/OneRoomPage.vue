@@ -61,12 +61,13 @@
           </div>
         </div>
         <div class="webCam">
+          <div id="remote-media"></div>
           <div class="preview">
             <div id="local-media"></div>
             <button @click="previewClick">Preview My Camera</button>
           </div>
           <div id="room-controls">
-            <button @click="twilliocall">Join</button>
+            <button id="button-join" @click="twilliocall">Join</button>
             <button id="button-leave" @click="leaveroom">Leave Room</button>
           </div>
         </div>
@@ -153,6 +154,7 @@
           this.attachParticipantTracks(room.localParticipant, previewContainer)
         }
         // Attach the Tracks of the Room's Participants.
+
         if (room.participants.length > 0) {
           room.participants.map((participant) => {
             console.log(`Already in Room: '` + participant.identity + `'`)
@@ -190,7 +192,9 @@
             })
           }
           this.detachParticipantTracks(room.localParticipant)
-          room.participants.map(this.detachParticipantTracks)
+          if (room.participants.length > 0) {
+            room.participants.map(this.detachParticipantTracks)
+          }
           this.activeRoom = null
           document.getElementById('button-join').style.display = 'inline'
           document.getElementById('button-leave').style.display = 'none'
@@ -389,11 +393,12 @@
   .webCam {
     border: 1px solid black;
     width: 100%;
-    height: 550px;
+    height: 1050px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    padding-bottom: 15px;
   }
   #local-media {
     padding: 15px;
