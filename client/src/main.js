@@ -10,7 +10,7 @@ import VModal from 'vue-js-modal'
 import Video from 'twilio-video'
 
 Vue.use(BootstrapVue)
-Vue.use(VueSocketio, 'http://138.68.103.82:2018?token=' + `${Auth().getToken()}`)
+Vue.use(VueSocketio, 'http://138.68.103.82:8081?token=' + `${Auth().getToken()}`)
 Vue.prototype.$auth = new Auth()
 Vue.prototype.$video = Video
 Vue.use(VModal, { dynamic: true })
