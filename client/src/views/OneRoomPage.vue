@@ -66,7 +66,8 @@
             <button @click="previewClick">Preview My Camera</button>
           </div>
           <div id="room-controls">
-            <button id="button-leave">Leave Room</button>
+            <button @click="twilliocall">Join</button>
+            <button id="button-leave" @click="leaveroom">Leave Room</button>
           </div>
         </div>
   </div>
@@ -99,14 +100,7 @@
         this.connectOptions.name = this.$route.params.room.id
         this.$socket.emit('join', this.room)
         let response = await MessagesService.getmessages(this.$route.params.room)
-        let response1 = await MessagesService.gettwiliotoken()
         // this.$auth.saveTwillioToken(response1.data.token)
-        if (this.previewTracks) {
-          this.connectOptions.tracks = this.previewTracks
-        }
-        this.$video.connect(response1.data.token, this.connectOptions).then(this.roomJoined, (error) => {
-          console.log('Could not connect to Twilio: ' + error.message)
-        })
         this.messages = response.data.messages
       } catch (error) {
         console.log(error)
@@ -159,11 +153,13 @@
           this.attachParticipantTracks(room.localParticipant, previewContainer)
         }
         // Attach the Tracks of the Room's Participants.
-        room.participants.map((participant) => {
-          console.log(`Already in Room: '` + participant.identity + `'`)
-          var previewContainer = document.getElementById('remote-media')
-          this.attachParticipantTracks(participant, previewContainer)
-        })
+        if (room.participants.length > 0) {
+          room.participants.map((participant) => {
+            console.log(`Already in Room: '` + participant.identity + `'`)
+            var previewContainer = document.getElementById('remote-media')
+            this.attachParticipantTracks(participant, previewContainer)
+          })
+        }
         // When a Participant joins the Room, console.log the event.
         room.on('participantConnected', (participant) => {
           console.log(`Joining: '` + participant.identity + `'`)
@@ -215,6 +211,18 @@
           console.error('Unable to access local media', error)
           console.log('Unable to access Camera and Microphone')
         })
+      },
+      async twilliocall () {
+        if (this.previewTracks) {
+          this.connectOptions.tracks = this.previewTracks
+        }
+        let response1 = await MessagesService.gettwiliotoken()
+        this.$video.connect(response1.data.token, this.connectOptions).then(this.roomJoined, (error) => {
+          console.log('Could not connect to Twilio: ' + error.message)
+        })
+      },
+      leaveroom () {
+        this.activeRoom.disconnect()
       },
       onFileChange (event) {
         var files = event.target.files || event.dataTransfer.files
