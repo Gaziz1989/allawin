@@ -26,7 +26,7 @@
             <button @click="createMessage" :class="buttonclass" :disabled="disabled">Send</button>
           </div>
         </div>
-        <div class=buttons>
+        <div class="buttons">
           <div class="inputforimg">
             <label title="Загрузить файл" class='uploadlabel'>
               <div>
@@ -60,6 +60,15 @@
             </label>
           </div>
         </div>
+        <div class="webCam">
+          <div class="preview">
+            <div id="local-media"></div>
+            <button @click="previewClick">Preview My Camera</button>
+          </div>
+          <div id="room-controls">
+            <button id="button-leave">Leave Room</button>
+          </div>
+        </div>
   </div>
 </template>
 
@@ -72,7 +81,13 @@
       return {
         room: ' ',
         messages: [],
-        message: ''
+        message: '',
+        previewTracks: '',
+        connectOptions: {
+          name: '',
+          logLevel: 'debug'
+        },
+        activeRoom: ''
       }
     },
     async beforeMount () {
@@ -81,10 +96,17 @@
           this.$router.go(-1)
         }
         this.room = this.$route.params.room
+        this.connectOptions.name = this.$route.params.room.id
         this.$socket.emit('join', this.room)
         let response = await MessagesService.getmessages(this.$route.params.room)
         let response1 = await MessagesService.gettwiliotoken()
-        this.$auth.saveTwillioToken(response1.data.token)
+        // this.$auth.saveTwillioToken(response1.data.token)
+        if (this.previewTracks) {
+          this.connectOptions.tracks = this.previewTracks
+        }
+        this.$video.connect(response1.data.token, this.connectOptions).then(this.roomJoined, (error) => {
+          console.log('Could not connect to Twilio: ' + error.message)
+        })
         this.messages = response.data.messages
       } catch (error) {
         console.log(error)
@@ -107,8 +129,92 @@
       }
     },
     methods: {
-      leaving () {
-        console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++114')
+      detachTracks (tracks) {
+        tracks.map((track) => {
+          track.detach().map((detachedElement) => {
+            detachedElement.remove()
+          })
+        })
+      },
+      detachParticipantTracks (participant) {
+        var tracks = Array.from(participant.tracks.values())
+        this.detachTracks(tracks)
+      },
+      attachTracks (tracks, container) {
+        tracks.map((track) => {
+          container.appendChild(track.attach())
+        })
+      },
+      attachParticipantTracks (participant, container) {
+        var tracks = Array.from(participant.tracks.values())
+        this.attachTracks(tracks, container)
+      },
+      roomJoined (room) {
+        this.activeRoom = room
+        console.log(`Joined as '` + this.$auth.currentUser().email + `'`)
+        document.getElementById('button-leave').style.display = 'inline'
+        // Attach LocalParticipant's Tracks, if not already attached.
+        var previewContainer = document.getElementById('local-media')
+        if (!previewContainer.querySelector('video')) {
+          this.attachParticipantTracks(room.localParticipant, previewContainer)
+        }
+        // Attach the Tracks of the Room's Participants.
+        room.participants.map((participant) => {
+          console.log(`Already in Room: '` + participant.identity + `'`)
+          var previewContainer = document.getElementById('remote-media')
+          this.attachParticipantTracks(participant, previewContainer)
+        })
+        // When a Participant joins the Room, console.log the event.
+        room.on('participantConnected', (participant) => {
+          console.log(`Joining: '` + participant.identity + `'`)
+        })
+        // When a Participant adds a Track, attach it to the DOM.
+        room.on('trackAdded', (track, participant) => {
+          console.log(participant.identity + ` added track: ` + track.kind)
+          var previewContainer = document.getElementById('remote-media')
+          this.attachTracks([track], previewContainer)
+        })
+        // When a Participant removes a Track, detach it from the DOM.
+        room.on('trackRemoved', (track, participant) => {
+          console.log(participant.identity + ` removed track: ` + track.kind)
+          this.detachTracks([track])
+        })
+        // When a Participant leaves the Room, detach its Tracks.
+        room.on('participantDisconnected', (participant) => {
+          console.log(`Participant '` + participant.identity + `' left the room`)
+          this.detachParticipantTracks(participant)
+        })
+        // Once the LocalParticipant leaves the room, detach the Tracks
+        // of all Participants, including that of the LocalParticipant.
+        room.on('disconnected', () => {
+          console.log('Left')
+          if (this.previewTracks) {
+            this.previewTracks.map((track) => {
+              track.stop()
+            })
+          }
+          this.detachParticipantTracks(room.localParticipant)
+          room.participants.map(this.detachParticipantTracks)
+          this.activeRoom = null
+          document.getElementById('button-join').style.display = 'inline'
+          document.getElementById('button-leave').style.display = 'none'
+        })
+      },
+      previewClick () {
+        var localTracksPromise = this.previewTracks
+          ? Promise.resolve(this.previewTracks)
+          : this.$video.createLocalTracks()
+
+        localTracksPromise.then((tracks) => {
+          // this.previewTracks = tracks
+          var previewContainer = document.getElementById('local-media')
+          if (!previewContainer.querySelector('video')) {
+            this.attachTracks(tracks, previewContainer)
+          }
+        }, function (error) {
+          console.error('Unable to access local media', error)
+          console.log('Unable to access Camera and Microphone')
+        })
       },
       onFileChange (event) {
         var files = event.target.files || event.dataTransfer.files
@@ -233,6 +339,7 @@
     border-radius: 10px;
     width: 100%;
     height: 450px;
+    border: 1px solid black;
   }
   .messages {
     width: 100%;
@@ -267,9 +374,27 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    margin-top: 50px;
     width: 100%;
-    height: 450px;
+    height: 250px;
+    border: 1px solid black;
+  }
+  .webCam {
+    border: 1px solid black;
+    width: 100%;
+    height: 550px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #local-media {
+    padding: 15px;
+    width: 50%;
+    height: 550px;
+  }
+  #local-media > video {
+    padding: 15px;
+    width: 50%;
   }
   .inputforimg{
     margin: 5px;
@@ -319,4 +444,5 @@
   .mainbtn:hover {
     background: #3ca8d8;
   }
+
 </style>
