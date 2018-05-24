@@ -76,6 +76,9 @@
 
 <script>
   import MessagesService from '@/services/MessagesService'
+  import io from 'socket.io-client'
+  import Auth from '@/utils/Auth'
+  import Vue from 'vue'
   export default {
     name: 'OneRoomPage',
     components: {},
@@ -92,6 +95,19 @@
         activeRoom: ''
       }
     },
+    created: function () {
+      try {
+        // https://chats-backend.mars.studio/
+        Vue.prototype.$socket = io('https://chats-backend.mars.studio/?token=' + `${Auth().getToken()}`, {
+          transports: ['websocket']
+        })
+        this.$socket.on('newMessage', function (msg) {
+          this.messages.push(msg)
+        }.bind(this))
+      } catch (error) {
+        console.log(error)
+      }
+    },
     async beforeMount () {
       try {
         if (!this.$route.params.room) {
@@ -101,7 +117,6 @@
         this.connectOptions.name = this.$route.params.room.id
         this.$socket.emit('join', this.room)
         let response = await MessagesService.getmessages(this.$route.params.room)
-        // this.$auth.saveTwillioToken(response1.data.token)
         this.messages = response.data.messages
       } catch (error) {
         console.log(error)
@@ -317,14 +332,6 @@
         } catch (error) {
           console.log(error)
         }
-      }
-    },
-    sockets: {
-      updateUserList () {
-
-      },
-      newMessage (msg) {
-        this.messages.push(msg)
       }
     }
   }
