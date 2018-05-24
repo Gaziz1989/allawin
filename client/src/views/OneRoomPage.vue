@@ -62,10 +62,7 @@
         </div>
         <div class="webCam">
           <div id="remote-media"></div>
-          <div class="preview">
-            <div id="local-media"></div>
-            <button @click="previewClick">Preview My Camera</button>
-          </div>
+          <div id="local-media"></div>
           <div id="room-controls">
             <button id="button-join" @click="twilliocall">Join</button>
             <button id="button-leave" @click="leaveroom">Leave Room</button>
@@ -98,9 +95,8 @@
     created: function () {
       try {
         // https://chats-backend.mars.studio/
-        Vue.prototype.$socket = io('https://chats-backend.mars.studio/?token=' + `${Auth().getToken()}`, {
-          transports: ['websocket']
-        })
+        // http://127.0.0.1:8081
+        Vue.prototype.$socket = io('https://chats-backend.mars.studio/?token=' + `${Auth().getToken()}`)
         this.$socket.on('newMessage', function (msg) {
           this.messages.push(msg)
         }.bind(this))
@@ -213,22 +209,6 @@
           this.activeRoom = null
           document.getElementById('button-join').style.display = 'inline'
           document.getElementById('button-leave').style.display = 'none'
-        })
-      },
-      previewClick () {
-        var localTracksPromise = this.previewTracks
-          ? Promise.resolve(this.previewTracks)
-          : this.$video.createLocalTracks()
-
-        localTracksPromise.then((tracks) => {
-          // this.previewTracks = tracks
-          var previewContainer = document.getElementById('local-media')
-          if (!previewContainer.querySelector('video')) {
-            this.attachTracks(tracks, previewContainer)
-          }
-        }, function (error) {
-          console.error('Unable to access local media', error)
-          console.log('Unable to access Camera and Microphone')
         })
       },
       async twilliocall () {

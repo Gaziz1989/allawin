@@ -45,7 +45,7 @@ module.exports = (io) => {
 
   	io.on('connection', (socket) => {
   		if (socket.connected) {
-  			console.log('New user connected', socket.user.id)
+  			console.log('New user connected to', socket.user.id)
 
 		    socket.on('join', async (room) => {
 		    	try {
