@@ -100,6 +100,9 @@
         this.$socket.on('newMessage', function (msg) {
           this.messages.push(msg)
         }.bind(this))
+        this.$socket.on('errorHandle', function (msg) {
+          alert(msg.text)
+        })
       } catch (error) {
         console.log(error)
       }

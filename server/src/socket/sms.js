@@ -15,7 +15,13 @@ const s3 = new AWS.S3({
     accessKeyId: '7EPP3JFIRC4EHZY3VVDO',
     secretAccessKey: 'JYLFXgCTusmGtGIh+qO74h/h598bKnTqC71E0gHjlCM'
 })
-
+let extChecker = (_array, _ext) => {
+	if (_array.indexOf(_ext) >= 0) {
+		return true
+	} else {
+		return false
+	}
+}
 let readFilePro = function (filename){
   return new Promise(function (resolve, reject) {
     fs.readFile(filename, (err, data) => {
@@ -95,11 +101,21 @@ module.exports = (io) => {
 					console.log(error)
 				}
 			})
-
 			socket.on('uploadFile', (file) => {
 				try {
 					const _length = file.filename.split('.').length
 					const extension = file.filename.split('.')[_length - 1]
+					const extArray = ['json', 'docx', 'doc', 'txt', 'rtf', 'docm', 'ppt', 'pptx', 'pptm', 'xps', 'potx', 'potm', 'pot', 'ppsx', 'pps', 'ppa', 'ppam', 'odp', 'pdf', 'xlsx', 'xlsm', 'xlsb', 'xlxt', 'xltm', 'xls', 'xlt', 'xml','xlam','xla','xlw']
+					if (!extChecker(extArray, extension)) {
+						return socket.emit('errorHandle', {
+							text: 'Формат не поддерживается!'
+						})
+					}
+					if (file.file.byteLength > 5242880) {
+						return socket.emit('errorHandle', {
+							text: 'Файл слишком большой!'
+						})
+					}
 					s3.upload({
 						Bucket: 'allawin-chats',
 						Key: `${uuidv4().split('-').join('')}.${extension}`,
@@ -138,6 +154,17 @@ module.exports = (io) => {
 				try {
 					const _length = file.filename.split('.').length
 					const extension = file.filename.split('.')[_length - 1]
+					const extArray = ['avi', 'wmv', 'mov', 'asf', 'mpeg', 'mp4']
+					if (!extChecker(extArray, extension)) {
+						return socket.emit('errorHandle', {
+							text: 'Формат не поддерживается!'
+						})
+					}
+					if (file.video.byteLength > 5242880) {
+						return socket.emit('errorHandle', {
+							text: 'Файл слишком большой!'
+						})
+					}
 					let name = `${uuidv4().split('-').join('')}.${extension}`
 					const filepath = path.join(__dirname, `../../static/transferedvideos/${name}`)
 					const _previewpath1 = path.join(__dirname, `../../static/transferedvideos/previews/600_${name}`)
@@ -211,7 +238,7 @@ module.exports = (io) => {
 								console.log(error)
 							})
 						}
-					})
+					})	
 				} catch (error) {
 					console.log(error)
 				}
@@ -221,6 +248,17 @@ module.exports = (io) => {
 				try {
 					const _length = file.filename.split('.').length
 					const extension = file.filename.split('.')[_length - 1]
+					const extArray = ['mp3', 'wma', 'aiff', 'flac', 'm4a', 'aac', 'm4a']
+					if (!extChecker(extArray, extension)) {
+						return socket.emit('errorHandle', {
+							text: 'Формат не поддерживается!'
+						})
+					}
+					if (file.audio.byteLength > 5242880) {
+						return socket.emit('errorHandle', {
+							text: 'Файл слишком большой!'
+						})
+					}
 					s3.upload({
 						Bucket: 'allawin-chats',
 						Key: `${uuidv4().split('-').join('')}.${extension}`,
@@ -260,7 +298,17 @@ module.exports = (io) => {
 					const _length = file.filename.split('.').length
 					const extension = file.filename.split('.')[_length - 1]
 					let name = `${uuidv4().split('-').join('')}.${extension}`
-
+					const extArray = ['svg', 'webp', 'png', 'tif', 'gif', 'jpeg', 'jpg']
+					if (!extChecker(extArray, extension)) {
+						return socket.emit('errorHandle', {
+							text: 'Формат не поддерживается!'
+						})
+					}
+					if (file.photo.byteLength > 5242880) {
+						return socket.emit('errorHandle', {
+							text: 'Файл слишком большой!'
+						})
+					}
 					let previewpath = await sharp(file.photo).resize(1200, null).toBuffer()
 					let previewpath1 = await sharp(file.photo).resize(600, null).toBuffer()
 					let previewpath2 = await sharp(file.photo).resize(300, null).toBuffer()
@@ -300,7 +348,6 @@ module.exports = (io) => {
 
 			socket.on('disconnect', (room) => {
 				try {
-					console.log(room)
 					socket.leave(room.id, () => {
 						socket.broadcast.to(room.id)
 						.emit('newMessage', {text: `${socket.user.email} leave the room`,
