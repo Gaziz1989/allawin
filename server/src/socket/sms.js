@@ -15,6 +15,13 @@ const s3 = new AWS.S3({
     accessKeyId: '7EPP3JFIRC4EHZY3VVDO',
     secretAccessKey: 'JYLFXgCTusmGtGIh+qO74h/h598bKnTqC71E0gHjlCM'
 })
+let locationCreator = (data) => {
+	if (data.Location.split('//')[0] === 'https:') {
+		return data.Location
+	} else {
+		return locationCreator(data)
+	}
+}
 let extChecker = (_array, _ext) => {
 	if (_array.indexOf(_ext) >= 0) {
 		return true
@@ -40,6 +47,9 @@ let uploadFile = function (_name, _bufer) {
 		}, function (error, data) {
 			if (error) {
 				console.log(error)
+				return socket.emit('errorHandle', {
+					text: error
+				})
 			} else {
 				resolve(data)
 			}
@@ -70,6 +80,9 @@ module.exports = (io) => {
 			    	}
 		    	} catch (error) {
 		    		console.log(error)
+		    		return socket.emit('errorHandle', {
+						text: error
+					})
 		    	}
 			})
 
@@ -99,19 +112,22 @@ module.exports = (io) => {
 					})
 				} catch (error) {
 					console.log(error)
+					return socket.emit('errorHandle', {
+						text: error
+					})
 				}
 			})
 			socket.on('uploadFile', (file) => {
 				try {
 					const _length = file.filename.split('.').length
 					const extension = file.filename.split('.')[_length - 1]
-					const extArray = ['json', 'docx', 'doc', 'txt', 'rtf', 'docm', 'ppt', 'pptx', 'pptm', 'xps', 'potx', 'potm', 'pot', 'ppsx', 'pps', 'ppa', 'ppam', 'odp', 'pdf', 'xlsx', 'xlsm', 'xlsb', 'xlxt', 'xltm', 'xls', 'xlt', 'xml','xlam','xla','xlw']
+					const extArray = ['mp3', 'png', 'json', 'docx', 'doc', 'txt', 'rtf', 'docm', 'ppt', 'pptx', 'pptm', 'xps', 'potx', 'potm', 'pot', 'ppsx', 'pps', 'ppa', 'ppam', 'odp', 'pdf', 'xlsx', 'xlsm', 'xlsb', 'xlxt', 'xltm', 'xls', 'xlt', 'xml','xlam','xla','xlw']
 					if (!extChecker(extArray, extension)) {
 						return socket.emit('errorHandle', {
 							text: 'Формат не поддерживается!'
 						})
 					}
-					if (file.file.byteLength > 5242880) {
+					if (file.file.byteLength > 15242880) {
 						return socket.emit('errorHandle', {
 							text: 'Файл слишком большой!'
 						})
@@ -126,7 +142,7 @@ module.exports = (io) => {
 							text: file.filename,
 							fromId: socket.user.id,
 							roomId: file.room.id,
-							file: `https://${data.Location}/${data.Key}`,
+							file: locationCreator(data),
 							type: 'file'
 						}).then(async created => {
 							let message = await Message.findOne({
@@ -147,6 +163,9 @@ module.exports = (io) => {
 					})
 				} catch (error) {
 					console.log(error)
+					return socket.emit('errorHandle', {
+						text: error
+					})
 				}
 			})
 
@@ -172,6 +191,9 @@ module.exports = (io) => {
 					fs.writeFile(filepath, file.video, async (error) => {
 						if (error) {
 							console.log(error)
+							return socket.emit('errorHandle', {
+								text: error
+							})
 						} else {
 							new Promise (function (resolve, reject){
 								const compressor = new ffmpeg(filepath)
@@ -199,9 +221,9 @@ module.exports = (io) => {
 									text: file.filename,
 									fromId: socket.user.id,
 									roomId: file.room.id,
-									file: `https://${big.Location}/${big.Key}`,
-								    preview1: `https://${middle.Location}/${middle.Key}`,
-								    preview2: `https://${small.Location}/${small.Key}`,
+									file: locationCreator(big),
+								    preview1: locationCreator(middle),
+								    preview2: locationCreator(small),
 									type: 'video'
 								}).then(async created => {
 									let message = await Message.findOne({
@@ -221,26 +243,41 @@ module.exports = (io) => {
 									fs.unlink(filepath, (error) => {
 										if (error) {
 											console.log(error)
+											return socket.emit('errorHandle', {
+												text: error
+											})
 										}
 									})
 									fs.unlink(_previewpath1, (error) => {
 										if (error) {
 											console.log(error)
+											return socket.emit('errorHandle', {
+												text: error
+											})
 										}
 									})
 									fs.unlink(_previewpath2, (error) => {
 										if (error) {
 											console.log(error)
+											return socket.emit('errorHandle', {
+												text: error
+											})
 										}
 									})
 								})
 							}).catch(error => {
 								console.log(error)
+								return socket.emit('errorHandle', {
+									text: error
+								})
 							})
 						}
 					})	
 				} catch (error) {
 					console.log(error)
+					return socket.emit('errorHandle', {
+						text: error
+					})
 				}
 			})
 
@@ -269,7 +306,7 @@ module.exports = (io) => {
 							text: file.filename,
 							fromId: socket.user.id,
 							roomId: file.room.id,
-							file: `https://${data.Location}/${data.Key}`,
+							file: locationCreator(data),
 							type: 'audio'
 						}).then(async created => {
 							let message = await Message.findOne({
@@ -290,6 +327,9 @@ module.exports = (io) => {
 					})
 				} catch (error) {
 					console.log(error)
+					return socket.emit('errorHandle', {
+						text: error
+					})
 				}
 			})
 
@@ -321,9 +361,9 @@ module.exports = (io) => {
 						text: file.filename,
 						fromId: socket.user.id,
 						roomId: file.room.id,
-						file: big.Location,
-					    preview1: middle.Location,
-					    preview2: small.Location,
+						file: locationCreator(big),
+					    preview1: locationCreator(middle),
+					    preview2: locationCreator(small),
 						type: 'image'
 					}).then(async created => {
 						let message = await Message.findOne({
@@ -343,6 +383,9 @@ module.exports = (io) => {
 					})
 				} catch (error) {
 					console.log(error)
+					return socket.emit('errorHandle', {
+						text: error
+					})
 				}
 			})
 
@@ -355,6 +398,9 @@ module.exports = (io) => {
 					})
 				} catch (error) {
 					console.log(error)
+					return socket.emit('errorHandle', {
+						text: error
+					})
 				}
 			})
   		} else {
