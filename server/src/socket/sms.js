@@ -19,7 +19,7 @@ let locationCreator = (data) => {
 	if (data.Location.split('//')[0] === 'https:') {
 		return data.Location
 	} else {
-		return locationCreator(data)
+		return `https://${data.Location}/${data.Key}`
 	}
 }
 let extChecker = (_array, _ext) => {
@@ -31,8 +31,13 @@ let extChecker = (_array, _ext) => {
 }
 let readFilePro = function (filename){
   return new Promise(function (resolve, reject) {
-    fs.readFile(filename, (err, data) => {
-      if(err) reject(err);
+    fs.readFile(filename, (error, data) => {
+	  if(error) {
+	  	console.log(error)
+		socket.emit('errorHandle', {
+			text: error
+		})
+	  };
       resolve(new Buffer(data, 'binary'))
     })
   })
@@ -47,7 +52,7 @@ let uploadFile = function (_name, _bufer) {
 		}, function (error, data) {
 			if (error) {
 				console.log(error)
-				return socket.emit('errorHandle', {
+				socket.emit('errorHandle', {
 					text: error
 				})
 			} else {
@@ -80,7 +85,7 @@ module.exports = (io) => {
 			    	}
 		    	} catch (error) {
 		    		console.log(error)
-		    		return socket.emit('errorHandle', {
+		    		socket.emit('errorHandle', {
 						text: error
 					})
 		    	}
@@ -112,7 +117,7 @@ module.exports = (io) => {
 					})
 				} catch (error) {
 					console.log(error)
-					return socket.emit('errorHandle', {
+					socket.emit('errorHandle', {
 						text: error
 					})
 				}
@@ -163,7 +168,7 @@ module.exports = (io) => {
 					})
 				} catch (error) {
 					console.log(error)
-					return socket.emit('errorHandle', {
+					socket.emit('errorHandle', {
 						text: error
 					})
 				}
@@ -267,7 +272,7 @@ module.exports = (io) => {
 								})
 							}).catch(error => {
 								console.log(error)
-								return socket.emit('errorHandle', {
+								socket.emit('errorHandle', {
 									text: error
 								})
 							})
@@ -275,7 +280,7 @@ module.exports = (io) => {
 					})	
 				} catch (error) {
 					console.log(error)
-					return socket.emit('errorHandle', {
+					socket.emit('errorHandle', {
 						text: error
 					})
 				}
@@ -327,7 +332,7 @@ module.exports = (io) => {
 					})
 				} catch (error) {
 					console.log(error)
-					return socket.emit('errorHandle', {
+					socket.emit('errorHandle', {
 						text: error
 					})
 				}
@@ -383,7 +388,7 @@ module.exports = (io) => {
 					})
 				} catch (error) {
 					console.log(error)
-					return socket.emit('errorHandle', {
+					socket.emit('errorHandle', {
 						text: error
 					})
 				}
@@ -398,7 +403,7 @@ module.exports = (io) => {
 					})
 				} catch (error) {
 					console.log(error)
-					return socket.emit('errorHandle', {
+					socket.emit('errorHandle', {
 						text: error
 					})
 				}
