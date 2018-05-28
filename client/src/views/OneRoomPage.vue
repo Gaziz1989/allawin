@@ -64,7 +64,14 @@
           <div id="remote-media"></div>
           <div id="local-media"></div>
           <div id="room-controls">
-            <button id="button-join" @click="twilliocall">Join</button>
+            <button id="button-join" @click="twilliocall">Video Call</button>
+            <button id="button-leave" @click="leaveroom">Leave Room</button>
+          </div>
+        </div>
+        <div class="audioCall">
+          <div id="remote-media1"></div>
+          <div id="room-controls1">
+            <button id="button-join" @click="twilliovoicecall">Voice Call</button>
             <button id="button-leave" @click="leaveroom">Leave Room</button>
           </div>
         </div>
@@ -214,12 +221,78 @@
           document.getElementById('button-leave').style.display = 'none'
         })
       },
+      roomJoinedAudio (room) {
+        this.activeRoom = room
+        // console.log(`Joined as '` + this.$auth.currentUser().email + `'`)
+        document.getElementById('button-leave').style.display = 'inline'
+        // Attach LocalParticipant's Tracks, if not already attached.
+        var previewContainer = document.getElementById('local-media')
+        if (!previewContainer.querySelector('video')) {
+          this.attachParticipantTracks(room.localParticipant, previewContainer)
+        }
+        // Attach the Tracks of the Room's Participants.
+
+        if (room.participants.length > 0) {
+          room.participants.map((participant) => {
+            // console.log(`Already in Room: '` + participant.identity + `'`)
+            var previewContainer = document.getElementById('remote-media1')
+            this.attachParticipantTracks(participant, previewContainer)
+          })
+        }
+        // When a Participant joins the Room, console.log the event.
+        room.on('participantConnected', (participant) => {
+          console.log(`Joining: '` + participant.identity + `'`)
+        })
+        // When a Participant adds a Track, attach it to the DOM.
+        room.on('trackAdded', (track, participant) => {
+          console.error(track)
+          // console.log(participant.identity + ` added track: ` + track.kind)
+          var previewContainer = document.getElementById('remote-media1')
+          this.attachTracks([track], previewContainer)
+        })
+        // When a Participant removes a Track, detach it from the DOM.
+        room.on('trackRemoved', (track, participant) => {
+          // console.log(participant.identity + ` removed track: ` + track.kind)
+          this.detachTracks([track])
+        })
+        // When a Participant leaves the Room, detach its Tracks.
+        room.on('participantDisconnected', (participant) => {
+          // console.log(`Participant '` + participant.identity + `' left the room`)
+          this.detachParticipantTracks(participant)
+        })
+        // Once the LocalParticipant leaves the room, detach the Tracks
+        // of all Participants, including that of the LocalParticipant.
+        room.on('disconnected', () => {
+          console.log('Left')
+          if (this.previewTracks) {
+            this.previewTracks.map((track) => {
+              track.stop()
+            })
+          }
+          this.detachParticipantTracks(room.localParticipant)
+          if (room.participants.length > 0) {
+            room.participants.map(this.detachParticipantTracks)
+          }
+          this.activeRoom = null
+          document.getElementById('button-join').style.display = 'inline'
+          document.getElementById('button-leave').style.display = 'none'
+        })
+      },
       async twilliocall () {
         if (this.previewTracks) {
           this.connectOptions.tracks = this.previewTracks
         }
         let response1 = await MessagesService.gettwiliotoken()
         this.$video.connect(response1.data.token, this.connectOptions).then(this.roomJoined, (error) => {
+          console.log('Could not connect to Twilio: ' + error.message)
+        })
+      },
+      async twilliovoicecall () {
+        if (this.previewTracks) {
+          this.connectOptions.tracks = this.previewTracks
+        }
+        let response1 = await MessagesService.gettwiliotoken()
+        this.$video.connect(response1.data.token, this.connectOptions).then(this.roomJoinedAudio, (error) => {
           console.log('Could not connect to Twilio: ' + error.message)
         })
       },

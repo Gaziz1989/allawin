@@ -3,6 +3,7 @@ const fs = require('fs')
 const path = require('path')
 var mime = require('mime')
 const AccessToken = require('twilio').jwt.AccessToken
+const ClientCapability = require('twilio').jwt.ClientCapability;
 const VideoGrant = AccessToken.VideoGrant
 require('dotenv').load()
 
