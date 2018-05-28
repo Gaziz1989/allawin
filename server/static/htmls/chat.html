@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chatty</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/html" href="./css/main.css" />
+</head>
+
+<body>
+    <div id="app">
+      <div class="mainInfo">
+        <h5>Комната: {{this.room ? this.room.id : this.room}}</h5>
+        <div class="chat">
+          <div class="messages" v-for="(message, index) in messages">
+            <span :class="smsclass(message) + ' download'"  v-if="message.type === 'file'">
+              <a :href="message.file" target='_blank' preload="none" download>{{message.text}}</a>
+            </span>
+            <span :class="smsclass(message) + ' img'"  v-else-if="message.type === 'image'">
+              <img :src="message.preview1" alt="Фото" width="180">
+            </span>
+            <span :class="smsclass(message) + ' video'"  v-else-if="message.type === 'video'">
+              <video width="320" height="240" controls>
+                <source :src="message.preview2">
+              </video>
+            </span>
+            <span :class="smsclass(message) + ' audio'"  v-else-if="message.type === 'audio'">
+              <audio controls>
+                <source :src="message.file">
+              </audio>
+            </span>
+            <span :class="smsclass(message)" v-else>{{message.from ? message.from.email : message.fromId}} : {{message.text}}</span>
+          </div>
+          <div class="sending">
+            <input type="text" name="text" class="sendInput" v-model="message">
+            <button @click="createMessage" :class="buttonclass" :disabled="disabled">Send</button>
+          </div>
+        </div>
+        <div class="buttons">
+          <div class="inputforimg">
+            <label title="Загрузить файл" class='uploadlabel'>
+              <div>
+                <span>Файл</span>
+                <input class="imginp" type="file" @change="onFileChange">
+              </div>
+            </label>
+          </div>
+          <div class="inputforimg">
+            <label title="Загрузить видео" class='uploadlabel'>
+              <div>
+                <span>Видео</span>
+                <input class="imginp" type="file" @change="onVideoChange">
+              </div>
+            </label>
+          </div>
+          <div class="inputforimg">
+            <label title="Загрузить аудио" class='uploadlabel'>
+              <div>
+                <span>Аудио</span>
+                <input class="imginp" type="file" @change="onAudioChange">
+              </div>
+            </label>
+          </div>
+          <div class="inputforimg">
+            <label title="Загрузить фото" class='uploadlabel'>
+              <div>
+                <span>Фото</span>
+                <input class="imginp" type="file" @change="onPhotoChange">
+              </div>
+            </label>
+          </div>
+        </div>
+        <div class="webCam">
+          <div id="remote-media"></div>
+          <div id="local-media"></div>
+          <div id="room-controls">
+            <button id="button-join" @click="twilliocall">Video Call</button>
+            <button id="button-leave" @click="leaveroom">Leave Room</button>
+          </div>
+        </div>
+        <div class="audioCall">
+          <div id="remote-media1"></div>
+          <div id="room-controls1">
+            <button id="button-join" @click="twilliovoicecall">Voice Call</button>
+            <button id="button-leave" @click="leaveroom">Leave Room</button>
+          </div>
+        </div>
+      </div>        
+    </div>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+    <script src="/htmls/js/client.js"></script>
+</body>
+
+</html>

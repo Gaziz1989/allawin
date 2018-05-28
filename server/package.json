@@ -32,11 +32,13 @@
     "passport-jwt": "^3.0.1",
     "pg": "^6.4.1",
     "pg-hstore": "^2.3.2",
+    "pug": "^2.0.3",
+    "pug-loader": "^2.4.0",
     "request": "^2.83.0",
     "sequelize": "^3.31.1",
     "sharp": "^0.20.2",
     "socket.io": "^2.1.0",
-    "twilio": "^3.17.0",
+    "twilio": "^3.17.1",
     "uuid": "^3.2.1"
   },
   "devDependencies": {

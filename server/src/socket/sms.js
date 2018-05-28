@@ -66,19 +66,19 @@ module.exports = (io) => {
 
   	io.on('connection', (socket) => {
   		if (socket.connected) {
-  			console.log('New user connected to', socket.user.id)
 
 		    socket.on('join', async (room) => {
 		    	try {
 		    		if (room) {
-			    		socket.join(room.id, () => {
-							// io.to(room.id).emit('updateUserList', users.getUserList(room.id))
+			    		socket.join(room, () => {
+			    			console.log(socket.user.id + ' connected to room: ' + room)
+							// io.to(room).emit('updateUserList', users.getUserList(room))
 							users.removeUser(socket.id)
-						    users.addUser(socket.id, socket.user.email, room.id)
+						    users.addUser(socket.id, socket.user.email, room)
 
-						    // io.to(room.id).emit('updateUserList', users.getUserList(room.id))
-						    // socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app', 'unread', room.id))
-						    socket.broadcast.to(room.id)
+						    // io.to(room).emit('updateUserList', users.getUserList(room))
+						    // socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app', 'unread', room))
+						    socket.broadcast.to(room)
 						      .emit('newMessage', {text: `${socket.user.email} has joined`,
 						      	from: 'Allawin'})
 			    		})
@@ -93,11 +93,11 @@ module.exports = (io) => {
 
 			socket.on('createMessage', async (msg) => {
 				try {
-					let user = users.getUser(socket.id)
+					// let user = users.getUser(socket.id)
 					Message.create({
 						text: msg.message,
 						fromId: socket.user.id,
-						roomId: msg.room.id,
+						roomId: msg.room,
 						type: 'text'
 					}).then(async created => {
 						let message = await Message.findOne({
@@ -113,7 +113,7 @@ module.exports = (io) => {
 						})
 						delete message.toJSON().from.token
 						delete message.toJSON().from.password
-						io.to(msg.room.id).emit('newMessage', message.toJSON())
+						io.to(msg.room).emit('newMessage', message.toJSON())
 					})
 				} catch (error) {
 					console.log(error)
@@ -146,7 +146,7 @@ module.exports = (io) => {
   						Message.create({
 							text: file.filename,
 							fromId: socket.user.id,
-							roomId: file.room.id,
+							roomId: file.room,
 							file: locationCreator(data),
 							type: 'file'
 						}).then(async created => {
@@ -163,7 +163,7 @@ module.exports = (io) => {
 							})
 							delete message.toJSON().from.token
 							delete message.toJSON().from.password
-							io.to(file.room.id).emit('newMessage', message.toJSON())
+							io.to(file.room).emit('newMessage', message.toJSON())
 						})
 					})
 				} catch (error) {
@@ -225,7 +225,7 @@ module.exports = (io) => {
 		  						Message.create({
 									text: file.filename,
 									fromId: socket.user.id,
-									roomId: file.room.id,
+									roomId: file.room,
 									file: locationCreator(big),
 								    preview1: locationCreator(middle),
 								    preview2: locationCreator(small),
@@ -244,7 +244,7 @@ module.exports = (io) => {
 									})
 									delete message.toJSON().from.token
 									delete message.toJSON().from.password
-									io.to(file.room.id).emit('newMessage', message.toJSON())
+									io.to(file.room).emit('newMessage', message.toJSON())
 									fs.unlink(filepath, (error) => {
 										if (error) {
 											console.log(error)
@@ -310,7 +310,7 @@ module.exports = (io) => {
   						Message.create({
 							text: file.filename,
 							fromId: socket.user.id,
-							roomId: file.room.id,
+							roomId: file.room,
 							file: locationCreator(data),
 							type: 'audio'
 						}).then(async created => {
@@ -327,7 +327,7 @@ module.exports = (io) => {
 							})
 							delete message.toJSON().from.token
 							delete message.toJSON().from.password
-							io.to(file.room.id).emit('newMessage', message.toJSON())
+							io.to(file.room).emit('newMessage', message.toJSON())
 						})
 					})
 				} catch (error) {
@@ -365,7 +365,7 @@ module.exports = (io) => {
 					await Message.create({
 						text: file.filename,
 						fromId: socket.user.id,
-						roomId: file.room.id,
+						roomId: file.room,
 						file: locationCreator(big),
 					    preview1: locationCreator(middle),
 					    preview2: locationCreator(small),
@@ -384,7 +384,7 @@ module.exports = (io) => {
 						})
 						delete message.toJSON().from.token
 						delete message.toJSON().from.password
-						io.to(file.room.id).emit('newMessage', message.toJSON())
+						io.to(file.room).emit('newMessage', message.toJSON())
 					})
 				} catch (error) {
 					console.log(error)
@@ -396,8 +396,8 @@ module.exports = (io) => {
 
 			socket.on('disconnect', (room) => {
 				try {
-					socket.leave(room.id, () => {
-						socket.broadcast.to(room.id)
+					socket.leave(room, () => {
+						socket.broadcast.to(room)
 						.emit('newMessage', {text: `${socket.user.email} leave the room`,
 						from: 'Allawin'})
 					})

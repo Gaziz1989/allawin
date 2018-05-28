@@ -43,6 +43,9 @@ require('./passport')
 require('./cron')
 require('./routes')(app)
 
+app.set('view engine', 'pug')
+app.set('views', path.resolve(__dirname, '../static/htmls'))
+
 sequelize.sync({
   force: false
 })

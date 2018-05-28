@@ -1,6 +1,5 @@
 const { User, Message } = require('../models')
 const fs = require('fs')
-const path = require('path')
 var mime = require('mime')
 const AccessToken = require('twilio').jwt.AccessToken
 const ClientCapability = require('twilio').jwt.ClientCapability;
@@ -33,10 +32,9 @@ module.exports = {
     },
 	async getmessages (req, res) {
 		try {
-            let room = JSON.parse(req.body.room)
             let messages = await Message.findAll({
                 where: {
-                    roomId: room.id
+                    roomId: req.query.room
                 },
                 include: [
                     {
@@ -57,17 +55,5 @@ module.exports = {
 		      error: 'Произошла ошибка на сервере!'
 		    })
 		}
-	},
-    async downloadfile (req, res) {
-        try {
-            let msg = JSON.parse(req.body.msg)
-            var file = msg.file
-            res.sendFile(file)
-        } catch (error) {
-            console.log(error)
-            res.status(500).send({
-              error: 'Произошла ошибка на сервере!'
-            })
-        }
-    }
+	}
 }

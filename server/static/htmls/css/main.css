@@ -1,0 +1,128 @@
+h5 {
+  	color: #404040;
+  }
+  .mainInfo {
+  	display: flex;
+  	flex-direction: column;
+  	justify-content: center;
+  	align-items: center;
+    width: 100%;
+  	box-shadow: 0 0 2px rgba(0,0,0,0.5);
+    border-radius: 1px;
+  	margin-bottom: 3em;
+  }
+  .chat {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+    width: 100%;
+    height: 450px;
+    border: 1px solid black;
+  }
+  .messages {
+    width: 100%;
+    height: 80%;
+    padding: 5px;
+    overflow-y: auto;
+    overflow-x: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .message {
+  }
+  .mysms {
+    align-self: flex-end;
+  }
+  .download {
+    cursor: pointer;
+  }
+  .img {
+    cursor: pointer;
+  }
+  .video {
+    cursor: pointer;
+  }
+  .audio {
+    cursor: pointer;
+  }
+  .buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 250px;
+    border: 1px solid black;
+  }
+  .webCam {
+    border: 1px solid black;
+    width: 100%;
+    height: 1050px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 15px;
+  }
+  #local-media {
+    padding: 15px;
+    width: 50%;
+    height: 550px;
+  }
+  #local-media > video {
+    padding: 15px;
+    width: 50%;
+  }
+  .inputforimg{
+    margin: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  .uploadlabel {
+    border: 1px solid black;
+    background: #fafafa;
+    color: #000;
+  }
+  .imginp {
+    display: none;
+  }
+  .sending {
+    width: 100%;
+    height: 25px;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+  .sendInput {
+    width: 100%;
+    height: 25px;
+    border: 1px solid #82caef;
+    border-radius: 10px;
+  }
+  .mainbtn {
+    padding: 0 15px 0 15px;
+    height: 25px;
+    background: #33444c;
+    border: none;
+    border-radius: 50px;
+    color: #fafafa;
+    cursor: pointer;
+  }
+  .dis_main_btn {
+    padding: 0 15px 0 15px;
+    height: 25px;
+    background: grey;
+    border-radius: 50px;
+    border: none;
+    color: #fafafa;
+  }
+  .mainbtn:hover {
+    background: #3ca8d8;
+  }
