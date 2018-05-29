@@ -12,13 +12,14 @@ const socket = require('socket.io')
 const io = socket()
 
 io.use( async (socket, next) => {
-  let token = socket.handshake.query.token;
-
+  let token = socket.handshake.query.token
+  console.log(socket.handshake.query.token)
   const user = await User.findOne({
     where: {
       token
     }
   })
+
   if (!user) {
     console.log('authentication error')
     return next(new Error('authentication error'))
