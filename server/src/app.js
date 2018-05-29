@@ -20,6 +20,7 @@ io.use( async (socket, next) => {
     }
   })
   if (!user) {
+    console.log('authentication error')
     return next(new Error('authentication error'))
   } else {
     socket.user = user.toJSON()

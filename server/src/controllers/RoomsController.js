@@ -4,9 +4,10 @@ const path = require('path')
 module.exports = {
     async connect (req, res) {
         try {
+            const _room = req.query.room
             res.render('homepage', {
-                room: '313b9b52-25d2-4a90-93ae-92d44eea08ab',
-                token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTU1Y2EzLWVhZGEtNGMzYi05MjJkLTM2NTBhMjdjYTVmMCIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwibmFtZSI6bnVsbCwicGhvbmUiOm51bGwsImFkcmVzcyI6bnVsbCwicGFzc3dvcmQiOiIkMmEkMDgkb3ZFbTRlWnRxU0pCQjZYQnBhbXpYTzE4Z0t5VnRnM2MwQkpvMnouNHpwWk9IREc4MEV4STYiLCJhcmNoaXZlZCI6ZmFsc2UsInN0YXR1cyI6ImFjdGl2ZSIsInR5cGUiOiJhZG1pbiIsImltYWdlIjpudWxsLCJiaW8iOm51bGwsInRva2VuIjpudWxsLCJjcmVhdGVkQXQiOiIyMDE4LTA1LTE4VDExOjA2OjQ0LjA5MloiLCJ1cGRhdGVkQXQiOiIyMDE4LTA1LTI4VDA2OjMxOjE4Ljg3N1oiLCJpYXQiOjE1Mjc1MDQ4OTQsImV4cCI6MTYxMzkwNDg5NH0.fVBay81ZazhwbHOhbNpnexGhKpjLblWWNRVSZxwnJQQ'
+                room: _room,
+                token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTU1Y2EzLWVhZGEtNGMzYi05MjJkLTM2NTBhMjdjYTVmMCIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwibmFtZSI6bnVsbCwicGhvbmUiOm51bGwsImFkcmVzcyI6bnVsbCwicGFzc3dvcmQiOiIkMmEkMDgkb3ZFbTRlWnRxU0pCQjZYQnBhbXpYTzE4Z0t5VnRnM2MwQkpvMnouNHpwWk9IREc4MEV4STYiLCJhcmNoaXZlZCI6ZmFsc2UsInN0YXR1cyI6ImFjdGl2ZSIsInR5cGUiOiJhZG1pbiIsImltYWdlIjpudWxsLCJiaW8iOm51bGwsInRva2VuIjpudWxsLCJjcmVhdGVkQXQiOiIyMDE4LTA1LTE4VDExOjA2OjQ0LjA5MloiLCJ1cGRhdGVkQXQiOiIyMDE4LTA1LTI5VDA2OjE1OjQ4LjA5MloiLCJpYXQiOjE1Mjc1NzczMzEsImV4cCI6MTYxMzk3NzMzMX0.ty0kzoXz_-ccX9lBq-fbtQcnzqSxhjM65swMeq8rCdQ'
             })
             // res.sendFile(path.resolve(__dirname, '../../static/htmls/chat.html'))
         } catch (error) {

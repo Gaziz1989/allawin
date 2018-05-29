@@ -8,19 +8,20 @@ html
         div(id="app")
             div(class="mainInfo")
                 h5 Комната: #{room}
-                div(class="chat")
-                    div(class="messages" v-for="(message, index) in messages")
-                        span(:class="smsclass(message) + ' download'"  v-if="message.type === 'file'")
-                            a(:href="message.file" target='_blank' preload="none" download) {{message.text}}
-                        span(:class="smsclass(message) + ' img'"  v-else-if="message.type === 'image'")
-                            img(:src="message.preview1" alt="Фото" width="180")
-                        span(:class="smsclass(message) + ' video'"  v-else-if="message.type === 'video'")
-                            video(width="320" height="240" controls)
-                                source(:src="message.preview2")
-                        span(:class="smsclass(message) + ' audio'"  v-else-if="message.type === 'audio'")
-                            audio(controls)
-                                source(:src="message.file")
-                        span(:class="smsclass(message)" v-else) {{message.from ? message.from.email : message.fromId}} : {{message.text}}
+                div(class="texts")
+                    div(class="chat")
+                        div(class="messages" v-for="(message, index) in messages")
+                            span(:class="smsclass(message) + ' download'"  v-if="message.type === 'file'")
+                                a(:href="message.file" target='_blank' preload="none" download) {{message.text}}
+                            span(:class="smsclass(message) + ' img'"  v-else-if="message.type === 'image'")
+                                img(:src="message.preview1" alt="Фото" width="180")
+                            span(:class="smsclass(message) + ' video'"  v-else-if="message.type === 'video'")
+                                video(width="320" height="240" controls)
+                                    source(:src="message.preview2")
+                            span(:class="smsclass(message) + ' audio'"  v-else-if="message.type === 'audio'")
+                                audio(controls)
+                                    source(:src="message.file")
+                            span(:class="smsclass(message)" v-else) {{message.from ? message.from.email : message.fromId}} : {{message.text}}
                 div(class="sending")
                     input(type="text" name="text" class="sendInput" v-model="message")
                     button(@click="createMessage" :class="buttonclass" :disabled="disabled") Send
@@ -51,6 +52,7 @@ html
         script(src="https://unpkg.com/axios/dist/axios.min.js")
         script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js")
         script.
+            const socket = io(`http://127.0.0.1:8081/?token=` + '#{token}')
             new Vue ({
                 el: "#app",
                 data: {
@@ -66,18 +68,14 @@ html
                     activeRoom: ''
                 },
                 created: async function () {
-                    Vue.prototype.$socket = io(`http://127.0.0.1:8081/?token=` + this.token)
-		
-                    this.$socket.on('errorHandle', function (msg) {
+                    socket.on('errorHandle', function (msg) {
                         alert(msg.text)
                     })
 
-                    this.$socket.on('newMessage', function (msg) {
+                    socket.on('newMessage', function (msg) {
                       this.messages.push(msg)
                     }.bind(this))
-
-                    this.$socket.emit('join', this.room)
-
+                    socket.emit('join', this.room)
                     let response = await axios.get('/getmessages?room=' + this.room)
                     this.messages = response.data.messages
                 },
@@ -190,7 +188,7 @@ html
                         var reader = new FileReader()
                         reader.readAsDataURL(file)
                         reader.onload = (e) => {
-                            this.$socket.emit('uploadFile', {
+                            socket.emit('uploadFile', {
                                 file: file,
                                 filename: file.name,
                                 room: this.room
@@ -208,7 +206,7 @@ html
                         var reader = new FileReader()
                         reader.readAsDataURL(file)
                         reader.onload = (e) => {
-                            this.$socket.emit('uploadVideo', {
+                            socket.emit('uploadVideo', {
                                 video: file,
                                 filename: file.name,
                                 room: this.room
@@ -226,7 +224,7 @@ html
                         var reader = new FileReader()
                         reader.readAsDataURL(file)
                         reader.onload = (e) => {
-                            this.$socket.emit('uploadAudio', {
+                            socket.emit('uploadAudio', {
                                 audio: file,
                                 filename: file.name,
                                 room: this.room
@@ -244,7 +242,7 @@ html
                         var reader = new FileReader()
                         reader.readAsDataURL(file)
                         reader.onload = (e) => {
-                            this.$socket.emit('uploadImage', {
+                            socket.emit('uploadImage', {
                                 photo: file,
                                 filename: file.name,
                                 room: this.room
@@ -261,7 +259,7 @@ html
                     },
                     async createMessage () {
                         try {
-                            await this.$socket.emit('createMessage', ({
+                            await socket.emit('createMessage', ({
                                 message: this.message,
                                 room: this.room
                             }))

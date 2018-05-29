@@ -66,7 +66,6 @@ module.exports = (io) => {
 
   	io.on('connection', (socket) => {
   		if (socket.connected) {
-
 		    socket.on('join', async (room) => {
 		    	try {
 		    		if (room) {
