@@ -13,7 +13,6 @@ const io = socket()
 
 io.use( async (socket, next) => {
   let token = socket.handshake.query.token
-  console.log(socket.handshake)
   const user = await User.findOne({
     where: {
       token
@@ -21,8 +20,13 @@ io.use( async (socket, next) => {
   })
 
   if (!user) {
-    console.log('authentication error')
-    return next(new Error('authentication error'))
+    console.log('Не получилось авторизовать пользователя!')
+    socket.user = {
+      email: 'noauth@gmail.com',
+      id: 'noauthID'
+    }
+    next()
+    // return next(new Error('authentication error'))
   } else {
     socket.user = user.toJSON()
     next()
