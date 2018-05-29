@@ -18,15 +18,9 @@ io.use( async (socket, next) => {
       token
     }
   })
-
   if (!user) {
     console.log('Не получилось авторизовать пользователя!')
-    socket.user = {
-      email: 'noauth@gmail.com',
-      id: 'noauthID'
-    }
-    next()
-    // return next(new Error('authentication error'))
+    return next(new Error('authentication error'))
   } else {
     socket.user = user.toJSON()
     next()

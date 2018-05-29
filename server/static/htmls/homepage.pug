@@ -4,6 +4,9 @@ html
         title Allawin
         link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css")
         link(rel="stylesheet" href="/htmls/css/main.css")
+        link(rel="manifest" href="/manifest.json")
+        script(src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async="")
+            
     body
         div(id="app")
             div(class="mainInfo")
@@ -46,14 +49,22 @@ html
                             div
                                 span Изображение
                                 input(class="imginp" type="file" @change="onPhotoChange" style="display:none")
-
+                    div(class="inputforimg")
+                        button(@click="calling") Call
         script(src="https://cdn.socket.io/socket.io-1.4.5.js")
         script(src="https://unpkg.com/vue/dist/vue.js")
         script(src="https://unpkg.com/axios/dist/axios.min.js")
         script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js")
         script.
+            var OneSignal = window.OneSignal || [];
+            OneSignal.push(function() {
+                OneSignal.init({
+                    appId: "cfd4c985-db67-4f51-986a-912f937efd0a",
+                })
+            })
+            // http://127.0.0.1:8081
             // https://chats-backend.mars.studio/
-            const socket = io(`https://chats-backend.mars.studio/?token=` + '#{token}')
+            const socket = io(`http://127.0.0.1:8081/?token=` + '#{token}')
             new Vue ({
                 el: "#app",
                 data: {
@@ -81,6 +92,15 @@ html
                     this.messages = response.data.messages
                 },
                 methods: {
+                    calling () {
+                        console.log('+++++++++++++++++++++++++')
+                        var OneSignal = window.OneSignal || []
+                        OneSignal.push(function() {
+                            OneSignal.init({
+                                appId: "cfd4c985-db67-4f51-986a-912f937efd0a",
+                            })
+                        })
+                    },
                     detachTracks (tracks) {
                         tracks.map((track) => {
                             track.detach().map((detachedElement) => {

@@ -1,11 +1,13 @@
 const { Room, RoomSubscriber } = require('../models')
 const path = require('path')
+var OneSignal = require('onesignal-node')
 
 module.exports = {
     async connect (req, res) {
         try {
             const _room = req.query.room
-            const _token = req.query.token
+            // const _token = req.query.token
+            const _token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU2MDMwNTU2LTU0YzgtNDQ2YS1hZDQ4LTkwODI4NmZkNTNhMyIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwibmFtZSI6bnVsbCwicGhvbmUiOm51bGwsImFkcmVzcyI6bnVsbCwicGFzc3dvcmQiOiIkMmEkMDgkRkFHZXF1OXE5N3hBN3EyZC9mSllVLm5CZDdmZnFRUDZlRzY1dXoxU3hFSkF0LjJEaEpyZzYiLCJhcmNoaXZlZCI6ZmFsc2UsInN0YXR1cyI6ImFjdGl2ZSIsInR5cGUiOiJhZG1pbiIsImltYWdlIjpudWxsLCJiaW8iOm51bGwsInRva2VuIjpudWxsLCJjcmVhdGVkQXQiOiIyMDE4LTA1LTI5VDEyOjIzOjUyLjQ3N1oiLCJ1cGRhdGVkQXQiOiIyMDE4LTA1LTI5VDEyOjIzOjUyLjQ3N1oiLCJpYXQiOjE1Mjc1OTcwMDUsImV4cCI6MTYxMzk5NzAwNX0.3PVezkkjuxYYFuceIM25jVoDQytmL3ped39k5o6PIN4'
             res.render('homepage', {
                 room: _room,
                 token: _token
@@ -18,8 +20,23 @@ module.exports = {
             })
         }
     },
-	async createroom (req, res) {
-		try {
+    async pushnote (req, res) {
+        try {
+            console.log(req.body)
+            var myClient = new OneSignal.Client({
+                userAuthKey: 'OTJiOTJlY2UtZmVjNy00NGY3LThlNzEtMzM4Y2Q0NWY2YjM0',
+                app: { appAuthKey: 'MGVlMGI0MWEtYzZlMS00ZWE3LTk0ZTItM2QyMTdjMGJhOTNk', appId: 'XXXXX' }
+            })
+                
+        } catch (error) {
+            console.log(error)
+            res.status(500).send({
+              error: 'Произошла ошибка на сервере!'
+            })
+        }
+    },
+    async createroom (req, res) {
+        try {
             let selected = JSON.parse(req.body.selected)
             let room = await Room.create({
                 ownerId: req.user.id
@@ -37,13 +54,13 @@ module.exports = {
                     })
                 }
             })
-		} catch (error) {
-			console.log(error)
-		    res.status(500).send({
-		      error: 'Произошла ошибка на сервере!'
-		    })
-		}
-	},
+        } catch (error) {
+            console.log(error)
+            res.status(500).send({
+              error: 'Произошла ошибка на сервере!'
+            })
+        }
+    },
     async getrooms (req, res) {
         try {
             let ownrooms = await Room.findAll({
