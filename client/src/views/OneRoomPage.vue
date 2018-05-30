@@ -122,7 +122,7 @@
         this.room = this.$route.params.room
         this.connectOptions.name = this.$route.params.room.id
         this.$socket.emit('join', this.room.id)
-        let response = await MessagesService.getmessages(this.$route.params.room)
+        let response = await MessagesService.getmessages(this.$route.params.room.id)
         this.messages = response.data.messages
       } catch (error) {
         console.log(error)

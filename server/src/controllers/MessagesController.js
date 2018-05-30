@@ -32,6 +32,7 @@ module.exports = {
     },
 	async getmessages (req, res) {
 		try {
+            console.log(req.query)
             let messages = await Message.findAll({
                 where: {
                     roomId: req.query.room
