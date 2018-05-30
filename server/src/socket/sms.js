@@ -93,6 +93,7 @@ module.exports = (io) => {
 			socket.on('createMessage', async (msg) => {
 				try {
 					// let user = users.getUser(socket.id)
+					console.log(msg)
 					Message.create({
 						text: msg.message,
 						fromId: socket.user.id,
