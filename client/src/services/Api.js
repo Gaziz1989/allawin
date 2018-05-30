@@ -4,7 +4,7 @@ import Auth from '../utils/Auth'
 // http://127.0.0.1:8081
 export default () => {
   return axios.create({
-    baseURL: `http://127.0.0.1:8081/`,
+    baseURL: `https://chats-backend.mars.studio/`,
     headers: {
       Authorization: `Bearer ${Auth().getToken()}`
     }

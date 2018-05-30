@@ -103,7 +103,7 @@
       try {
         // https://chats-backend.mars.studio/
         // http://127.0.0.1:8081
-        Vue.prototype.$socket = io('http://127.0.0.1:8081/?token=' + `${Auth().getToken()}`)
+        Vue.prototype.$socket = io('https://chats-backend.mars.studio/?token=' + `${Auth().getToken()}`)
         this.$socket.on('newMessage', function (msg) {
           this.messages.push(msg)
         }.bind(this))
@@ -121,7 +121,7 @@
         }
         this.room = this.$route.params.room
         this.connectOptions.name = this.$route.params.room.id
-        this.$socket.emit('join', this.room)
+        this.$socket.emit('join', this.room.id)
         let response = await MessagesService.getmessages(this.$route.params.room)
         this.messages = response.data.messages
       } catch (error) {
@@ -313,7 +313,7 @@
           this.$socket.emit('uploadFile', {
             file: file,
             filename: file.name,
-            room: this.room
+            room: this.room.id
           })
         }
       },
@@ -331,7 +331,7 @@
           this.$socket.emit('uploadVideo', {
             video: file,
             filename: file.name,
-            room: this.room
+            room: this.room.id
           })
         }
       },
@@ -349,7 +349,7 @@
           this.$socket.emit('uploadAudio', {
             audio: file,
             filename: file.name,
-            room: this.room
+            room: this.room.id
           })
         }
       },
@@ -367,7 +367,7 @@
           this.$socket.emit('uploadImage', {
             photo: file,
             filename: file.name,
-            room: this.room
+            room: this.room.id
           })
         }
       },
@@ -382,7 +382,7 @@
         try {
           await this.$socket.emit('createMessage', ({
             message: this.message,
-            room: this.room
+            room: this.room.id
           }))
           this.message = ''
         } catch (error) {
