@@ -68,6 +68,7 @@ module.exports = (io) => {
   		if (socket.connected) {
 		    socket.on('join', async (room) => {
 		    	try {
+		    		console.log(room)
 		    		if (room) {
 			    		socket.join(room, () => {
 			    			console.log(socket.user.id + ' connected to room: ' + room)
