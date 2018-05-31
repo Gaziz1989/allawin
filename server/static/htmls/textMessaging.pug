@@ -5,11 +5,8 @@ html
         link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css")
         link(rel="stylesheet" href="/htmls/css/chats.css")
         link(rel="manifest" href="/manifest.json")
-        //- script()
-            
     body
         div(id="app")
-            button(@click="pushnote") PUSHNOTE
             div(class="modal-window")
                 div(class="chat")
                     div(class="modal-header")
@@ -18,73 +15,23 @@ html
                             div(class="chat__user--name")
                                 h4 Костя Сирнов
                                 span Jurist
-                                p 2 from 30
+                                p {{messages.length}}
                     div(class="modal-body")
-                        div(class="chat-video")
-                            div(class="chat-video__name") Bagdat Mussin
-                                span {{new Date()}}
-                            div(class="chat-video__item")
-                                img(src="/htmls/assets/img/video.png" alt="" class="chat-video__item--img")
-                                button(class="chat-video__img--button" data-toggle="modal" data-target="#play-video")
-                                    img(src="/htmls/assets/img/icons/play.svg" alt="" class="video-play")
-                        div(class="chat-video chat-video-right")
-                            div(class="chat-video__name") I
-                                span {{new Date()}}
-                            div(class="chat-video__item")
-                                img(src="/htmls/assets/img/video.png" alt="" class="chat-video__item--img")
-                                button(class="chat-video__img--button" data-toggle="modal" data-target="#play-video")
-                                    img(src="/htmls/assets/img/icons/play.svg" alt="" class="video-play")
-                            span(class="chat-video__viewed") Seen {{new Date()}}
-                        button(class="chat-extend") Prolongate the video to 10 min for 5500 tng?
-                    div(class="modal-footer")
-                        button(data-toggle="modal" data-target="#complete-video-chat" class="chat-video__send") Send videos?
-                            img(src="/htmls/assets/img/icons/icon-video.svg" alt="")
-            //- div(class="mainInfo")
-                h5 Комната: #{room}
-                div(class="texts")
-                    div(class="chat")
-                        div(class="messages" v-for="(message, index) in messages")
-                            span(:class="smsclass(message) + ' download'"  v-if="message.type === 'file'")
-                                a(:href="message.file" target='_blank' preload="none" download) {{message.text}}
-                            span(:class="smsclass(message) + ' img'"  v-else-if="message.type === 'image'")
-                                img(:src="message.preview1" alt="Фото" width="180")
-                            span(:class="smsclass(message) + ' video'"  v-else-if="message.type === 'video'")
-                                video(width="320" height="240" controls)
-                                    source(:src="message.preview2")
-                            span(:class="smsclass(message) + ' audio'"  v-else-if="message.type === 'audio'")
-                                audio(controls)
-                                    source(:src="message.file")
-                            span(:class="smsclass(message)" v-else) {{message.from ? message.from.email : message.fromId}} : {{message.text}}
-                div(class="sending")
-                    input(type="text" name="text" class="sendInput" v-model="message")
-                    button(@click="createMessage" :class="buttonclass" :disabled="disabled") Send
-                div(class="buttons")
-                    div(class="inputforimg")
-                        label(title="Загрузить файл" class='uploadlabel')
-                            div
-                                span Файл
-                                input(class="imginp" type="file" @change="onFileChange" style="display:none")
-                    div(class="inputforimg")
-                        label(title="Загрузить видео" class='uploadlabel')
-                            div
-                                span Видео
-                                input(class="imginp" type="file" @change="onVideoChange" style="display:none")
-                    div(class="inputforimg")
-                        label(title="Загрузить аудио" class='uploadlabel')
-                            div
-                                span Аудио
-                                input(class="imginp" type="file" @change="onAudioChange" style="display:none")
-                    div(class="inputforimg")
-                        label(title="Загрузить изображение" class='uploadlabel')
-                            div
-                                span Изображение
-                                input(class="imginp" type="file" @change="onPhotoChange" style="display:none")
-                    div(class="inputforimg")
-                        button(@click="calling") Call
+                        div(:class="smsclass(message)" v-for="(message, index) in messages")
+                            div(class="chat-video__name") {{message.from.email}}
+                                span {{message.createdAtt}}
+                            div(class="chat-sms__item")
+                                p {{message.text}}
+                    div(class="modal-footer modal-footer-sms")
+                        input(placeholder="Введите текст сообщения" v-model="message" type="text" name="text")
+                        button(@click="createMessage" class="chat-video__send" :disabled="disabled")
+                            img(src="/htmls/assets/img/icons/sms.svg" alt="")
+            
         script(src="https://cdn.socket.io/socket.io-1.4.5.js")
         script(src="https://unpkg.com/vue/dist/vue.js")
         script(src="https://unpkg.com/axios/dist/axios.min.js")
         script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js")
+        script(src="/htmls/js/jwt-decode.min.js")
         script.
             // http://127.0.0.1:8081
             // https://chats-backend.mars.studio/
@@ -101,7 +48,8 @@ html
                       name: '',
                       logLevel: 'debug'
                     },
-                    activeRoom: ''
+                    activeRoom: '',
+                    text: ''
                 },
                 created: async function () {
                     socket.on('errorHandle', function (msg) {
@@ -117,8 +65,9 @@ html
                 },
                 methods: {
                     async pushnote () {
-                        console.log('++++++++++++++++++++++++++++')
-                        let response = await axios.post('/pushnote')
+                        console.log(this.text)
+                        const formData = `message=${JSON.stringify(this.text)}`
+                        let response = await axios.post('/pushnote', formData)
                     },
                     detachTracks (tracks) {
                         tracks.map((track) => {
@@ -290,11 +239,11 @@ html
                         }
                     },
                     smsclass (_item) {
-                        if (_item.fromId === '66555ca3-eada-4c3b-922d-3650a27ca5f0') {
+                        if (_item.fromId === jwt_decode(this.token).id) {
                             // this.$auth.currentUser().id
-                            return 'mysms'
+                            return 'chat-video chat-video-right'
                         } else {
-                            return 'message'
+                            return 'chat-video'
                         }
                     },
                     async createMessage () {
@@ -326,3 +275,45 @@ html
                     }
                 }
             })
+            //- div(class="mainInfo")
+            //-     h5 Комната: #{room}
+            //-     div(class="texts")
+            //-         div(class="chat")
+            //-             div(class="messages" v-for="(message, index) in messages")
+            //-                 span(:class="smsclass(message) + ' download'"  v-if="message.type === 'file'")
+            //-                     a(:href="message.file" target='_blank' preload="none" download) {{message.text}}
+            //-                 span(:class="smsclass(message) + ' img'"  v-else-if="message.type === 'image'")
+            //-                     img(:src="message.preview1" alt="Фото" width="180")
+            //-                 span(:class="smsclass(message) + ' video'"  v-else-if="message.type === 'video'")
+            //-                     video(width="320" height="240" controls)
+            //-                         source(:src="message.preview2")
+            //-                 span(:class="smsclass(message) + ' audio'"  v-else-if="message.type === 'audio'")
+            //-                     audio(controls)
+            //-                         source(:src="message.file")
+            //-                 span(:class="smsclass(message)" v-else) {{message.from ? message.from.email : message.fromId}} : {{message.text}}
+            //-     div(class="sending")
+            //-         input(type="text" name="text" class="sendInput" v-model="message")
+            //-         button(@click="createMessage" :class="buttonclass" :disabled="disabled") Send
+            //-     div(class="buttons")
+            //-         div(class="inputforimg")
+            //-             label(title="Загрузить файл" class='uploadlabel')
+            //-                 div
+            //-                     span Файл
+            //-                     input(class="imginp" type="file" @change="onFileChange" style="display:none")
+            //-         div(class="inputforimg")
+            //-             label(title="Загрузить видео" class='uploadlabel')
+            //-                 div
+            //-                     span Видео
+            //-                     input(class="imginp" type="file" @change="onVideoChange" style="display:none")
+            //-         div(class="inputforimg")
+            //-             label(title="Загрузить аудио" class='uploadlabel')
+            //-                 div
+            //-                     span Аудио
+            //-                     input(class="imginp" type="file" @change="onAudioChange" style="display:none")
+            //-         div(class="inputforimg")
+            //-             label(title="Загрузить изображение" class='uploadlabel')
+            //-                 div
+            //-                     span Изображение
+            //-                     input(class="imginp" type="file" @change="onPhotoChange" style="display:none")
+            //-         div(class="inputforimg")
+            //-             button(@click="calling") Call

@@ -19,7 +19,6 @@
       <span v-for="item in selected" @click="choose(item)" class="one">{{item}}</span>
       <button class="mainbtn" @click="createroom" v-if="this.selected.length > 0">Создать комнату</button>
     </div>
-
 	</div>
 </template>
 
@@ -41,18 +40,16 @@
     },
     async beforeMount () {
       try {
-        let OneSignal = window.OneSignal || []
+        var OneSignal = window.OneSignal || []
         OneSignal.push(() => {
           OneSignal.init({
             appId: 'f6fe8c7b-872d-41bc-823a-dd3426ab5206',
-            autoRegister: false,
+            autoRegister: true,
             notifyButton: {
               enable: true
             }
           })
-          OneSignal.sendTags({
-            key: this.$auth.currentUser().id
-          })
+          OneSignal.sendTags({id: this.$auth.currentUser().id})
         })
         let response = await UsersService.getusers()
         response.data.users.map(item => {
