@@ -1,7 +1,37 @@
 const { Room, RoomSubscriber } = require('../models')
 const path = require('path')
-const OneSignal = require('onesignal-node')
 const request = require('request-promise-native')
+const https = require('https')
+
+const sendNotification = function(data) {
+    return new Promise ((resolve, reject) => {
+        var options = {
+            host: "onesignal.com",
+            port: 443,
+            path: "/api/v1/notifications",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                "Authorization": "Basic OGJiOWMwZDgtYzYxZC00M2ExLWI4MjUtNWU2ZmFiMzUwYWQ0"
+            }
+        }
+          
+        var req = https.request(options, function(res) {  
+            res.on('data', function(data) {
+                resolve(JSON.parse(data))
+            })
+        })
+          
+        req.on('error', function(e) {
+            reject(e)
+        })
+          
+        req.write(JSON.stringify(data))
+        req.end()
+    })
+}
+
+
 
 module.exports = {
     async connect (req, res) {
@@ -33,21 +63,15 @@ module.exports = {
     },
     async pushnote (req, res) {
         try {
-            // console.log(req.body)
-            const myClient = new OneSignal.Client({
-                userAuthKey: 'OTJiOTJlY2UtZmVjNy00NGY3LThlNzEtMzM4Y2Q0NWY2YjM0',
-                app: { appAuthKey: 'OGJiOWMwZDgtYzYxZC00M2ExLWI4MjUtNWU2ZmFiMzUwYWQ0', appId: 'f6fe8c7b-872d-41bc-823a-dd3426ab5206' }
+            let message = { 
+                app_id: "f6fe8c7b-872d-41bc-823a-dd3426ab5206",
+                contents: {"en": "English Message"},
+                included_segments: ["All"]
+            }
+            let response = await sendNotification(message)
+            res.send({
+                message: 'Отправлено!'
             })
-            const firstNotification = new OneSignal.Notification({
-                contents: {
-                    en: "Test notification",
-                    tr: "Test mesajı"
-                }
-            })
-            firstNotification.setFilters([
-                {"field": "tag", "key": "level", "relation": ">", "value": "10"},
-                {"field": "amount_spent", "relation": ">","value": "0"}
-            ])
         } catch (error) {
             console.log(error)
             res.status(500).send({

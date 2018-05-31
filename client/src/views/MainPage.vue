@@ -41,6 +41,19 @@
     },
     async beforeMount () {
       try {
+        let OneSignal = window.OneSignal || []
+        OneSignal.push(() => {
+          OneSignal.init({
+            appId: 'f6fe8c7b-872d-41bc-823a-dd3426ab5206',
+            autoRegister: false,
+            notifyButton: {
+              enable: true
+            }
+          })
+          OneSignal.sendTags({
+            key: this.$auth.currentUser().id
+          })
+        })
         let response = await UsersService.getusers()
         response.data.users.map(item => {
           if (item.type === 'user') {

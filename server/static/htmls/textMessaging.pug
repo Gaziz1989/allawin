@@ -9,6 +9,7 @@ html
             
     body
         div(id="app")
+            button(@click="pushnote") PUSHNOTE
             div(class="modal-window")
                 div(class="chat")
                     div(class="modal-header")
@@ -115,6 +116,10 @@ html
                     this.messages = response.data.messages
                 },
                 methods: {
+                    async pushnote () {
+                        console.log('++++++++++++++++++++++++++++')
+                        let response = await axios.post('/pushnote')
+                    },
                     detachTracks (tracks) {
                         tracks.map((track) => {
                             track.detach().map((detachedElement) => {
