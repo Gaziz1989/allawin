@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>WhatsApp</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="user-interface" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="03-1_Клиент_главная" transform="translate(-512.000000, -726.000000)" fill-rule="nonzero" fill="#7ED321">
+            <path d="M528,733.793956 C528,738.098489 524.483733,741.587911 520.145422,741.587911 C518.768178,741.587911 517.474311,741.235911 516.348622,740.618133 L512,742 L513.417778,737.818311 C512.702578,736.643911 512.290667,735.266489 512.290667,733.793956 C512.290667,729.489422 515.807289,726 520.145422,726 C524.484089,726 528,729.489422 528,733.793956 Z" id="WhatsApp"></path>
+        </g>
+    </g>
+</svg>

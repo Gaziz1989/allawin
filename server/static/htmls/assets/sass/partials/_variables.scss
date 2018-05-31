@@ -1,0 +1,102 @@
+// Brand colors
+// -------------------------
+
+$brand-primary:         #428bca !default;
+$brand-success:         #5cb85c !default;
+$brand-warning:         #f0ad4e !default;
+$brand-danger:          #d9534f !default;
+$brand-info:            #5bc0de !default;
+
+$border-color:          #f0f0f0 !default;
+$bg-color:              #efeff4 !default;
+$block-color:           #ffffff !default;
+$link-color :           #0069c4!default;
+$placeholder-color:     #9b9b9b !default;
+$btn-red:               #fb3e5e !default;
+$btn-red-hover:         #f02144 !default;
+$bg-footer:             #1f2635 !default;
+$p-color:               #4a4a4a!default;
+$filter-default:        #F8F8F8!default;
+$bright-blue:           #007aff!default;
+$dropdown-color:        #eeeeee!default;
+$address-color:         #474a51!default;
+$green-color:           #34a853!default;
+$color-red:             #FB3E5E;
+$color-yellow:          #f5a623;
+$topic-review:          #4a90e2;
+$gray-light:            #F9F8FC;
+$gray:                  #F6F6F6;
+$hover-blue:            #0562c7;
+$bg-chat:               #f9f9f9;
+$pale-grey:             #e5e6ea;
+// Typography
+// -------------------------
+
+$font-family-gilroy-extrabold:  "Gilroy-ExtraBold", Helvetica, Arial, sans-serif !default;
+$font-family-gilroy-light:      "Gilroy-Light", Times, serif !default;
+
+$font-size-base:          1rem !default; //14px
+$font-size-large:         1.28rem !default; // ~18px
+$font-size-small:         12px !default; // ~12px
+$font-size-default:        1.07rem !default; // 15px
+
+
+$font-size-h1:            2.36rem !default; // ~33px
+$font-size-h2:            floor($font-size-base * 2.15) !default; // ~30px
+$font-size-h3:            ceil($font-size-base * 1.7) !default; // ~24px
+$font-size-h4:            ceil($font-size-base * 1.25) !default; // ~18px
+$font-size-h5:            $font-size-base !default;
+$font-size-h6:            ceil($font-size-base * 0.85) !default; // ~12px
+
+$line-height-base:        1.71 !default;
+$line-height-computed:    floor($font-size-base * $line-height-base) !default; // ~20px
+
+$headings-font-family:    $font-family-gilroy-extrabold !default;
+$headings-font-weight:    500 !default;
+$headings-line-height:    1.1 !default;
+$headings-color:          inherit !default;
+
+
+// Based on 14px font-size and 1.428 line-height (~20px to start)
+
+
+$border-radius-base:             4px !default;
+$border-radius-large:            8px !default;
+$border-radius-small:            3px !default;
+
+
+
+
+// Buttons
+// -------------------------
+$btn-width-large:                    26.28rem !default; //368px
+$btn-width-medium:                   20.5rem !default; //287px
+$btn-width-small:                    9.714rem !default; //136px
+
+$btn-height-large:                    3.57rem !default; //50px
+$btn-height-medium:                   2.85rem !default; //40px
+$btn-height-small:                    2rem !default; //28px
+
+
+$btn-font-weight:                normal !default;
+
+$btn-light-blue:                 rgba(0, 122, 255, 0.4) !default;
+$btn-dark-blue:                   #007aff!default;
+
+// Inputs
+// -------------------------
+
+$input-width-xl:                    25rem !default; //350px
+$input-width-l:                    22.85rem !default; //320px
+$input-width-m:                   20.5rem !default;//287px
+$input-width-s:                    14.285rem !default; //200px
+$input-width-xs:                    4.85rem !default; //68px
+
+$input-height-large:                     3.57rem !default; //50px
+$input-height-medium:                    2.85rem !default; //40px
+$input-height-small:                    2rem !default; //28px
+
+
+// src
+// -------------------------
+

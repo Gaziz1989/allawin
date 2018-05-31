@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="22px" height="18px" viewBox="0 0 22 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50 (54983) - http://www.bohemiancoding.com/sketch -->
+    <title>chat_new_mess_send</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="connection-interface" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="06_2_Офлайн-смс-чат-продления" transform="translate(-923.000000, -712.000000)">
+            <g id="Chat" transform="translate(371.000000, 0.000000)">
+                <g id="Content" transform="translate(0.000000, 94.000000)">
+                    <g id="Write" transform="translate(0.000000, 600.000000)">
+                        <g id="chat_new_mess_send" transform="translate(550.853242, 15.000000)">
+                            <polygon id="Shape" points="0 0 24.5733788 0 24.5733788 24 0 24"></polygon>
+                            <path d="M2.05802048,21 L21.6985367,12.7751245 C22.7207889,12.347035 22.7201657,11.652704 21.6985367,11.2248755 L2.05802048,3 L2.04778157,10 L17.4061433,12 L2.04778157,14 L2.05802048,21 Z" fill="#9DA5B1"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,256 @@
+button{
+  max-width: 100%;
+}
+button:focus, button:active, button:hover {
+  outline: none !important;
+}
+
+
+.btn-general{
+  font: $font-size-default $font-family-gilroy-extrabold;
+  border: none;
+  outline: none!important;
+  cursor: pointer;
+  color:#fff;
+}
+
+.button-base{
+  &__button{
+    @extend .btn-general;
+    width: $btn-width-medium; //287px
+    height: $btn-height-large;
+    font-size: $font-size-default;
+    border-radius: $border-radius-large;
+    &_margin{
+      margin-top: 13px; //24px;
+      margin-left: -10px;
+    }
+    &_margin2{
+      margin-top: 46px;
+      margin-left: -10px;
+    }
+    &_margin3{
+      margin-top: 30px;
+      margin-left: 0px;
+    }
+    &_light-blue{
+      background-color: $btn-light-blue;
+    }
+
+    &_dark-blue{
+      background-color: $btn-dark-blue;
+      &:hover, &:focus, &:active{
+        background-color: $hover-blue;
+      }
+    }
+    &_dark-white{
+      background-color:  #f9f8fc;
+      color: $bright-blue;
+    }
+    &_dark-color-white{
+      background-color:  #f9f8fc;
+      color: $placeholder-color;
+      border: solid 1px #efefef;
+    }
+    &_opacity-blue{
+background: rgba(0,122,255,0.4);
+    }
+    &_center{
+      margin: 2px auto 22px;
+      display: block;
+    }
+  }
+
+  &_mt{
+    margin-top: 2.57rem; //36px
+  }
+  &_mt2{
+    margin-top: 0;
+  }
+  &__inputBtn{
+    @extend .btn-general;
+    width: $btn-width-small;
+    height: $btn-height-medium;
+    border-radius: $border-radius-base;
+    background-color: $btn-red;
+    margin-top: 0;
+    &:hover,  &:focus,  &:active{
+      background-color: $btn-red-hover;
+    }
+  }
+  &__searchBtn{
+    @extend .btn-general;
+    height: 2.80rem;
+    float: left;
+    width: 20%;
+    padding: 10px;
+    background: $btn-dark-blue;
+    border-radius: 0 4px 4px 0;
+    &:hover{
+      background: #0b7dda;
+    }
+  }
+  &__choosePayment{
+    @extend .btn-general;
+    width: 240px;
+    height: 32px;
+    border-radius: 8px;
+    font-size: 12px!important;
+    margin-left: 5px;
+    margin-top: 8px;
+  }
+  &__filterBtn{
+    @extend .btn-general;
+    width: 200px;
+    height: 28px;
+    border-radius: $border-radius-small;
+    &_margin{
+      margin-top: 22px;
+      margin-left: 4px;
+    }
+  }
+  &__payment{
+    @extend .btn-general;
+    width: 24.5rem;
+    height: 44px;
+  }
+  &__complain{
+    @extend .btn-general;
+    width: 100%;
+    height: 44px;
+  }
+  &__next{
+    @extend .btn-general;
+    width: 140px;
+    height: 40px;
+    border-radius: 8px;
+  }
+  &__mainScreen{
+    @extend .btn-general;
+    width: 287px;
+    height: 40px;
+    border-radius: 8px;
+  }
+}
+.switch {
+  position: relative;
+  margin: 20px 0;
+  height: 23px;
+  width: 210px;
+  background: $bg-color;
+  border-radius: 17px;
+  border: none;
+  overflow: hidden;
+
+  &-label {
+    position: relative;
+    z-index: 2;
+    float: left;
+    width: 105px;
+    line-height: 22px;
+    font-size:$font-size-small;
+    font-family: $font-family-gilroy-light;
+    color: $bright-blue;
+    text-align: center;
+    cursor: pointer;
+    font-weight: normal;
+  }
+
+  &-label-off {
+    padding-left: 2px;
+  }
+
+  &-label-on {
+    padding-left: 10px;
+  }
+
+  &-input {
+    display: none;
+  }
+
+  &-input:checked + &-label {
+    -webkit-transition: 0.15s ease-out;
+    -moz-transition: 0.15s ease-out;
+    -o-transition: 0.15s ease-out;
+    transition: 0.15s ease-out;
+    color: #fff;
+  }
+
+  &-input:checked + &-label-on ~ &-selection {
+    /* Note: left: 50% doesn't transition in WebKit */
+    left: 105px;
+  }
+
+  &-selection {
+    display: block;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 105px;
+    height: 23px;
+    background: $bright-blue;
+    -webkit-transition: left 0.15s ease-out;
+    -moz-transition: left 0.15s ease-out;
+    -o-transition: left 0.15s ease-out;
+    transition: left 0.15s ease-out;
+    -webkit-border-radius: 17px;
+    -moz-border-radius: 17px;
+    border-radius: 17px;
+    color: #fff;
+  }
+}
+
+.on-off{
+& input {
+  display: none;
+}
+  &  label {
+  cursor: pointer;
+  padding-right: 35px;
+  position: relative;
+  display: block;
+  padding: 0;
+  width: 30px;
+}
+  & input[type="checkbox"],
+  &  input[type="radio"] {
+  position: absolute;
+  visibility: hidden !important;
+}
+  &  input[type="checkbox"] + label:before,
+  &  input[type="radio"] + label:before,
+  &  input[type="checkbox"] + label:after,
+  &  input[type="radio"] + label:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  margin-top: 0px;
+  box-sizing: border-box;
+}
+  & input[type="checkbox"] + label:before,
+  &  input[type="radio"] + label:before {
+  width: 30px;
+  height: 17px;
+  right: 0px;
+  background: #34a853;
+  border:none;
+  border-radius: 15px;
+}
+  &  input[type="checkbox"] + label:after,
+  &  input[type="radio"] + label:after {
+    width: 15px;
+    height: 15px;
+    right: 14px;
+    background: #fff;
+    border: none;
+    border-radius: 50%;
+    transition: all 200ms ease-out;
+    top: 1px;
+}
+  &  input[type="checkbox"]:checked + label:after,
+  &  input[type="radio"]:checked + label:after {
+  right: 1px;
+    background: #fff;
+}
+}

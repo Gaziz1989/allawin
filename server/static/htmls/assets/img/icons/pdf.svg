@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="31px" height="34px" viewBox="0 0 31 34" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50 (54983) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 3</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="connection-interface" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="06_Офлайн-смс-чат" transform="translate(-763.000000, -535.000000)">
+            <g id="Chat" transform="translate(371.000000, 0.000000)">
+                <g id="Content" transform="translate(0.000000, 94.000000)">
+                    <g id="1" transform="translate(21.501706, 113.000000)">
+                        <g id="Group-3" transform="translate(371.000000, 328.000000)">
+                            <path d="M6.27133106,0 C5.0746587,0 4.09556314,0.95625 4.09556314,2.125 L4.09556314,31.875 C4.09556314,33.04375 5.0746587,34 6.27133106,34 L28.0290102,34 C29.2256826,34 30.2047782,33.04375 30.2047782,31.875 L30.2047782,8.5 L21.5017065,0 L6.27133106,0 Z" id="Shape" fill="#E2E5E7" fill-rule="nonzero"></path>
+                            <path d="M21.7576792,27.625 C21.7576792,28.209375 21.3497227,28.6875 20.8511092,28.6875 L0.906569966,28.6875 C0.407956485,28.6875 0,28.209375 0,27.625 L0,17 C0,16.415625 0.407956485,15.9375 0.906569966,15.9375 L20.8511092,15.9375 C21.3497227,15.9375 21.7576792,16.415625 21.7576792,17 L21.7576792,27.625 Z" id="Shape" fill="#F76868" fill-rule="nonzero"></path>
+                            <text id="PDF" font-family="AvenirNext-Bold, Avenir Next" font-size="8" font-weight="bold" fill="#FFFFFF">
+                                <tspan x="2.04778157" y="25">PDF</tspan>
+                            </text>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

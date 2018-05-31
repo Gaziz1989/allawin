@@ -1,14 +1,25 @@
 const { Room, RoomSubscriber } = require('../models')
 const path = require('path')
-var OneSignal = require('onesignal-node')
+const OneSignal = require('onesignal-node')
+const request = require('request-promise-native')
 
 module.exports = {
     async connect (req, res) {
         try {
-            const _room = req.query.room
-            // const _token = req.query.token
+            let info = await request({
+                uri: `http://allawin.mars.studio/api/v1/ru/order/get-info-for-socket`,
+                qs: {
+                    order_id: req.query.order_id,
+                    token: '312310fsdmoo432ij'
+                },
+                json: true
+            })
+            info = info.data
+            
+            const _room = 'fdcd13b2-72ab-47cc-acf9-99f658b229cf'
+            // // // const _token = req.query.token
             const _token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU2MDMwNTU2LTU0YzgtNDQ2YS1hZDQ4LTkwODI4NmZkNTNhMyIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwibmFtZSI6bnVsbCwicGhvbmUiOm51bGwsImFkcmVzcyI6bnVsbCwicGFzc3dvcmQiOiIkMmEkMDgkRkFHZXF1OXE5N3hBN3EyZC9mSllVLm5CZDdmZnFRUDZlRzY1dXoxU3hFSkF0LjJEaEpyZzYiLCJhcmNoaXZlZCI6ZmFsc2UsInN0YXR1cyI6ImFjdGl2ZSIsInR5cGUiOiJhZG1pbiIsImltYWdlIjpudWxsLCJiaW8iOm51bGwsInRva2VuIjpudWxsLCJjcmVhdGVkQXQiOiIyMDE4LTA1LTI5VDEyOjIzOjUyLjQ3N1oiLCJ1cGRhdGVkQXQiOiIyMDE4LTA1LTI5VDEyOjIzOjUyLjQ3N1oiLCJpYXQiOjE1Mjc1OTcwMDUsImV4cCI6MTYxMzk5NzAwNX0.3PVezkkjuxYYFuceIM25jVoDQytmL3ped39k5o6PIN4'
-            res.render('homepage', {
+            res.render('textMessaging', {
                 room: _room,
                 token: _token
             })
@@ -22,12 +33,21 @@ module.exports = {
     },
     async pushnote (req, res) {
         try {
-            console.log(req.body)
-            var myClient = new OneSignal.Client({
+            // console.log(req.body)
+            const myClient = new OneSignal.Client({
                 userAuthKey: 'OTJiOTJlY2UtZmVjNy00NGY3LThlNzEtMzM4Y2Q0NWY2YjM0',
-                app: { appAuthKey: 'MGVlMGI0MWEtYzZlMS00ZWE3LTk0ZTItM2QyMTdjMGJhOTNk', appId: 'XXXXX' }
+                app: { appAuthKey: 'OGJiOWMwZDgtYzYxZC00M2ExLWI4MjUtNWU2ZmFiMzUwYWQ0', appId: 'f6fe8c7b-872d-41bc-823a-dd3426ab5206' }
             })
-                
+            const firstNotification = new OneSignal.Notification({
+                contents: {
+                    en: "Test notification",
+                    tr: "Test mesajı"
+                }
+            })
+            firstNotification.setFilters([
+                {"field": "tag", "key": "level", "relation": ">", "value": "10"},
+                {"field": "amount_spent", "relation": ">","value": "0"}
+            ])
         } catch (error) {
             console.log(error)
             res.status(500).send({

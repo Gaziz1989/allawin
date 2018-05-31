@@ -5,6 +5,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+    <script>
+      var OneSignal = window.OneSignal || []
+      OneSignal.push(function() {
+        OneSignal.init({
+          appId: "f6fe8c7b-872d-41bc-823a-dd3426ab5206",
+          autoRegister: false,
+          notifyButton: {
+            enable: true,
+          },
+        })
+      })
+    </script>
     <title>Allawin</title>
   </head>
 

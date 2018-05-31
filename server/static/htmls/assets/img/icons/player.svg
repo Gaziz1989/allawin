@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="17px" height="16px" viewBox="0 0 17 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>Combined Shape</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="user-interface" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.800000012">
+        <g id="04-2_Клиент_просмотр-профиля-проф." transform="translate(-483.000000, -1192.000000)" fill="#FFFFFF">
+            <g id="Group" transform="translate(420.000000, 1161.000000)">
+                <path d="M71.6991643,46.9591837 C67.2993471,46.9591837 63.7325905,43.3957358 63.7325905,39 C63.7325905,34.6042642 67.2993471,31.0408163 71.6991643,31.0408163 C76.0989816,31.0408163 79.6657382,34.6042642 79.6657382,39 C79.6657382,43.3957358 76.0989816,46.9591837 71.6991643,46.9591837 Z M74.2134609,37.8776821 L71.1645122,35.8083743 C70.2527856,35.1895895 69.511307,35.5821504 69.511307,36.6871746 L69.511307,41.3122357 C69.511307,42.4223419 70.2514722,42.8107122 71.1645122,42.191036 L74.2134609,40.1217281 C75.1251875,39.5029433 75.1265009,38.4973583 74.2134609,37.8776821 Z" id="Combined-Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>

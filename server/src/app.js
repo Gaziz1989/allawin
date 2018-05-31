@@ -13,7 +13,6 @@ const io = socket()
 
 io.use( async (socket, next) => {
   let token = socket.handshake.query.token
-  console.log(socket.handshake.query.token)
   const user = await User.findOne({
     where: {
       token

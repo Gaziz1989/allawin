@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="9px" height="15px" viewBox="0 0 9 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>Icon Copy 2</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M10.1584114,-2.70069737 L3.29020587,3.82590941 C2.90326471,4.19306402 2.90326471,4.80599359 3.29020587,5.17465603 L10.1584114,11.699755 C10.5796289,12.1000817 11.2445888,12.1000817 11.6658062,11.699755 C12.1113979,11.276057 12.1113979,10.5703964 11.6658062,10.1459446 L5.91348412,4.68009047 C5.80913188,4.58132814 5.80913188,4.41772947 5.91348412,4.31896714 L11.6658062,-1.14688698 C12.1113979,-1.57058491 12.1113979,-2.27624552 11.6658062,-2.70069737 C11.4548167,-2.89972985 11.1836532,-3 10.9124897,-3 C10.6405645,-3 10.369401,-2.89972985 10.1584114,-2.70069737 Z" id="path-1"></path>
+    </defs>
+    <g id="profi-interface" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="12-3_Профи_-Мои-услуги-Ред." transform="translate(-419.000000, -80.000000)">
+            <g id="Icon-Copy-2" transform="translate(423.500000, 87.500000) scale(-1, 1) rotate(-90.000000) translate(-423.500000, -87.500000) translate(416.000000, 83.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="Back" fill="#007AFF" transform="translate(7.500000, 4.500000) rotate(270.000000) translate(-7.500000, -4.500000) " xlink:href="#path-1"></use>
+            </g>
+        </g>
+    </g>
+</svg>

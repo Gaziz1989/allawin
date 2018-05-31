@@ -68,7 +68,6 @@ module.exports = (io) => {
   		if (socket.connected) {
 		    socket.on('join', async (room) => {
 		    	try {
-		    		console.log(room)
 		    		if (room) {
 			    		socket.join(room, () => {
 			    			console.log(socket.user.id + ' connected to room: ' + room)
@@ -94,7 +93,6 @@ module.exports = (io) => {
 			socket.on('createMessage', async (msg) => {
 				try {
 					// let user = users.getUser(socket.id)
-					console.log(msg)
 					Message.create({
 						text: msg.message,
 						fromId: socket.user.id,

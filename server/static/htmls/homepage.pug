@@ -3,13 +3,42 @@ html
         meta(charset="UTF-8")
         title Allawin
         link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css")
-        link(rel="stylesheet" href="/htmls/css/main.css")
+        link(rel="stylesheet" href="/htmls/css/chats.css")
         link(rel="manifest" href="/manifest.json")
-        script(src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async="")
+        //- script(src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async="")
             
     body
-        div(id="app")
-            div(class="mainInfo")
+        div(id="app" class="chat")
+            div(class="modal-window")
+                div(class="chat")
+                    div(class="modal-header")
+                        div(class="chat__user")
+                            img(src="/htmls/assets/img/avatar.png" alt="" class="chat__user--img")
+                            div(class="chat__user--name")
+                                h4 Костя Сирнов
+                                span Jurist
+                                p 2 from 30
+                    div(class="modal-body")
+                        div(class="chat-video")
+                            div(class="chat-video__name") Bagdat Mussin
+                                span {{new Date()}}
+                            div(class="chat-video__item")
+                                img(src="/htmls/assets/img/video.png" alt="" class="chat-video__item--img")
+                                button(class="chat-video__img--button" data-toggle="modal" data-target="#play-video")
+                                    img(src="/htmls/assets/img/icons/play.svg" alt="" class="video-play")
+                        div(class="chat-video chat-video-right")
+                            div(class="chat-video__name") I
+                                span {{new Date()}}
+                            div(class="chat-video__item")
+                                img(src="/htmls/assets/img/video.png" alt="" class="chat-video__item--img")
+                                button(class="chat-video__img--button" data-toggle="modal" data-target="#play-video")
+                                    img(src="/htmls/assets/img/icons/play.svg" alt="" class="video-play")
+                            span(class="chat-video__viewed") Seen {{new Date()}}
+                        button(class="chat-extend") Prolongate the video to 10 min for 5500 tng?
+                    div(class="modal-footer")
+                        button(data-toggle="modal" data-target="#complete-video-chat" class="chat-video__send") Send videos?
+                            img(src="/htmls/assets/img/icons/icon-video.svg" alt="")
+            //- div(class="mainInfo")
                 h5 Комната: #{room}
                 div(class="texts")
                     div(class="chat")
@@ -56,12 +85,12 @@ html
         script(src="https://unpkg.com/axios/dist/axios.min.js")
         script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js")
         script.
-            var OneSignal = window.OneSignal || [];
-            OneSignal.push(function() {
-                OneSignal.init({
-                    appId: "cfd4c985-db67-4f51-986a-912f937efd0a",
-                })
-            })
+            //- var OneSignal = window.OneSignal || [];
+            //- OneSignal.push(function() {
+            //-     OneSignal.init({
+            //-         appId: "cfd4c985-db67-4f51-986a-912f937efd0a",
+            //-     })
+            //- })
             // http://127.0.0.1:8081
             // https://chats-backend.mars.studio/
             const socket = io(`http://127.0.0.1:8081/?token=` + '#{token}')
@@ -92,6 +121,9 @@ html
                     this.messages = response.data.messages
                 },
                 methods: {
+                    openModal () {
+
+                    },
                     calling () {
                         console.log('+++++++++++++++++++++++++')
                     },

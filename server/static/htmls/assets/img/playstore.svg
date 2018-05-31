@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="177px" height="56px" viewBox="0 0 177 56" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>btn_android@2x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M19.71375,10.798125 L13.441875,7.1775 C13.441875,7.1775 2.01375,0.5775 1.340625,0.1903125 C0.6703125,-0.1978125 0,0.0365625 0,0.845625 L0,14.9353125 L0,29.31 C0,29.9184375 0.48,30.181875 1.0621875,29.8434375 C1.6471875,29.506875 13.441875,22.695 13.441875,22.695 L19.71375,19.074375 C19.71375,19.074375 25.036875,16.00125 25.7446875,15.5925 C26.4515625,15.1846875 26.385,14.625 25.786875,14.3025 C25.18875,13.98 19.71375,10.798125 19.71375,10.798125 L19.71375,10.798125 Z" id="path-1"></path>
+        <path d="M19.71375,10.798125 L13.441875,7.1775 C13.441875,7.1775 2.01375,0.5775 1.340625,0.1903125 C0.6703125,-0.1978125 0,0.0365625 0,0.845625 L0,14.9353125 L0,29.31 C0,29.9184375 0.48,30.181875 1.0621875,29.8434375 C1.6471875,29.506875 13.441875,22.695 13.441875,22.695 L19.71375,19.074375 C19.71375,19.074375 25.036875,16.00125 25.7446875,15.5925 C26.4515625,15.1846875 26.385,14.625 25.786875,14.3025 C25.18875,13.98 19.71375,10.798125 19.71375,10.798125 L19.71375,10.798125 Z" id="path-3"></path>
+        <path d="M19.71375,10.798125 L13.441875,7.1775 C13.441875,7.1775 2.01375,0.5775 1.340625,0.1903125 C0.6703125,-0.1978125 0,0.0365625 0,0.845625 L0,14.9353125 L0,29.31 C0,29.9184375 0.48,30.181875 1.0621875,29.8434375 C1.6471875,29.506875 13.441875,22.695 13.441875,22.695 L19.71375,19.074375 C19.71375,19.074375 25.036875,16.00125 25.7446875,15.5925 C26.4515625,15.1846875 26.385,14.625 25.786875,14.3025 C25.18875,13.98 19.71375,10.798125 19.71375,10.798125 L19.71375,10.798125 Z" id="path-5"></path>
+        <path d="M19.71375,10.798125 L13.441875,7.1775 C13.441875,7.1775 2.01375,0.5775 1.340625,0.1903125 C0.6703125,-0.1978125 0,0.0365625 0,0.845625 L0,14.9353125 L0,29.31 C0,29.9184375 0.48,30.181875 1.0621875,29.8434375 C1.6471875,29.506875 13.441875,22.695 13.441875,22.695 L19.71375,19.074375 C19.71375,19.074375 25.036875,16.00125 25.7446875,15.5925 C26.4515625,15.1846875 26.385,14.625 25.786875,14.3025 C25.18875,13.98 19.71375,10.798125 19.71375,10.798125 L19.71375,10.798125 Z" id="path-7"></path>
+    </defs>
+    <g id="user-interface" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="03-1_Клиент_главная" transform="translate(-929.000000, -1608.000000)">
+            <g id="Footer" transform="translate(0.000000, 1442.000000)">
+                <g id="Links" transform="translate(169.000000, 62.000000)">
+                    <g id="3" transform="translate(761.000000, 3.000000)">
+                        <g id="btns" transform="translate(0.000000, 38.000000)">
+                            <g id="btn_android" transform="translate(0.000000, 64.000000)">
+                                <rect id="Rectangle-82" stroke="#FFFFFF" stroke-width="2" opacity="0.2" x="0" y="0" width="175" height="54" rx="8"></rect>
+                                <g id="txt" transform="translate(19.500000, 6.000000)">
+                                    <text id="Google-play" font-family="OpenSans-Bold, Open Sans" font-size="18" font-weight="bold" fill="#FFFFFF">
+                                        <tspan x="39" y="34">Google play</tspan>
+                                    </text>
+                                    <text id="Beta-version" font-family="OpenSans-Light, Open Sans" font-size="14" font-weight="300" fill="#FFFFFF">
+                                        <tspan x="39" y="15">Beta version</tspan>
+                                    </text>
+                                    <g id="PLAY" transform="translate(0.887739, 6.344828)">
+                                        <g id="Clipped">
+                                            <mask id="mask-2" fill="white">
+                                                <use xlink:href="#path-1"></use>
+                                            </mask>
+                                            <g id="SVGID_1_"></g>
+                                            <polygon id="Shape" fill="#2CAFA2" mask="url(#mask-2)" points="0 -0.4725 0 14.93625 0 30.3440625 15.5409375 14.93625"></polygon>
+                                        </g>
+                                        <g id="Clipped">
+                                            <mask id="mask-4" fill="white">
+                                                <use xlink:href="#path-3"></use>
+                                            </mask>
+                                            <g id="SVGID_1_"></g>
+                                            <polygon id="Shape" fill="#77E888" mask="url(#mask-4)" points="19.71375 10.798125 13.441875 7.1765625 0 -0.585 0 -0.4725 15.5409375 14.93625"></polygon>
+                                        </g>
+                                        <g id="Clipped">
+                                            <mask id="mask-6" fill="white">
+                                                <use xlink:href="#path-5"></use>
+                                            </mask>
+                                            <g id="SVGID_1_"></g>
+                                            <polygon id="Shape" fill="#CC3A72" mask="url(#mask-6)" points="0 30.3440625 0 30.4565625 13.441875 22.6959375 19.71375 19.0753125 15.5409375 14.93625"></polygon>
+                                        </g>
+                                        <g id="Clipped">
+                                            <mask id="mask-8" fill="white">
+                                                <use xlink:href="#path-7"></use>
+                                            </mask>
+                                            <g id="SVGID_1_"></g>
+                                            <polygon id="Shape" fill="#EA9053" mask="url(#mask-8)" points="19.71375 10.798125 15.5409375 14.93625 19.71375 19.0753125 26.88375 14.93625"></polygon>
+                                        </g>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

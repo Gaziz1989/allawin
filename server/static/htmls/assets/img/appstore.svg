@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="177px" height="56px" viewBox="0 0 177 56" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>btn_ios@1x</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="user-interface" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="03-1_Клиент_главная" transform="translate(-929.000000, -1544.000000)">
+            <g id="Footer" transform="translate(0.000000, 1442.000000)">
+                <g id="Links" transform="translate(169.000000, 62.000000)">
+                    <g id="3" transform="translate(761.000000, 3.000000)">
+                        <g id="btns" transform="translate(0.000000, 38.000000)">
+                            <g id="btn_ios">
+                                <rect id="Rectangle-82" stroke="#FFFFFF" stroke-width="2" opacity="0.2" x="0" y="0" width="175" height="54" rx="8"></rect>
+                                <g id="txt" transform="translate(14.500000, 5.500000)" fill="#FFFFFF">
+                                    <g id="Availible-on-the-+-App-Store" transform="translate(35.000000, 0.000000)">
+                                        <text id="Available-on-the" font-family="OpenSans-Light, Open Sans" font-size="13" font-weight="300">
+                                            <tspan x="0" y="14">Available on the</tspan>
+                                        </text>
+                                        <text id="App-Store" font-family="OpenSans-Bold, Open Sans" font-size="18" font-weight="bold">
+                                            <tspan x="0" y="33">App Store</tspan>
+                                        </text>
+                                    </g>
+                                    <path d="M20.4041935,20.9414112 C20.4450486,25.478765 24.3848206,26.9879641 24.4293343,27.0086966 C24.3939672,27.1123587 23.7982147,29.1606011 22.3512128,31.275919 C21.1011691,33.1040317 19.8053921,34.922388 17.7614182,34.9595844 C15.750982,34.9980004 15.1058375,33.7686891 12.8081962,33.7686891 C10.5105548,33.7686891 9.79345658,34.9229977 7.89278035,34.9980004 C5.92076016,35.073003 4.41765881,33.0241508 3.15724888,31.2033554 C0.579109933,27.4782252 -1.38986137,20.676158 1.25596287,16.0863633 C2.56698433,13.8057958 4.91523719,12.3618428 7.46288727,12.3240366 C9.39954037,12.2898891 11.2300922,13.6307897 12.4124506,13.6307897 C13.5972481,13.6307897 15.8211064,12.0179284 18.1565539,12.2551318 C19.1340272,12.2953771 21.8804647,12.649048 23.6433312,15.2265772 C23.5030824,15.3186536 20.3663873,17.1412783 20.4041935,20.9414112 Z M16.6266224,9.78980166 C15.5771954,11.0569191 13.8600622,12.0441488 12.1764668,11.9136564 C11.9490198,10.1892059 12.7978299,8.39707003 13.7685956,7.2714209 C14.8521701,6.00308386 16.6790632,5.06097774 18.1882624,5 C18.380952,6.75615898 17.6723907,8.52024507 16.6266224,9.78980166 Z" id="Shape"></path>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

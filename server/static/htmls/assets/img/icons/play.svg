@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="55px" height="54px" viewBox="0 0 55 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50 (54983) - http://www.bohemiancoding.com/sketch -->
+    <title>Mask</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="54" height="54" rx="27"></rect>
+    </defs>
+    <g id="connection-interface" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="14_Офлайн-видеочат" transform="translate(-515.000000, -301.000000)">
+            <g id="Chat" transform="translate(371.000000, 0.000000)">
+                <g id="1" transform="translate(22.501706, 207.000000)">
+                    <g id="Mask" transform="translate(122.000000, 94.000000)">
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <use fill-opacity="0.5" fill="#FFFFFF" xlink:href="#path-1"></use>
+                        <path d="M38.497393,26.4108336 C39.4152882,27.0304129 39.4114681,28.0375279 38.497393,28.6545286 L22.1289267,39.7032434 C21.2110315,40.3228227 20.4669304,39.9253331 20.4669304,38.8269086 L20.4669304,16.2384536 C20.4669304,15.134888 21.2148515,14.7451181 22.1289267,15.3621188 L38.497393,26.4108336 Z" id="ic_mic_play" fill="#848A90" mask="url(#mask-2)"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

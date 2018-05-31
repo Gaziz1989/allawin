@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="10px" height="16px" viewBox="0 0 10 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>Icon Copy</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M7.27203702,0.319256141 L0.294812312,7.28097003 C-0.0982707706,7.67260162 -0.0982707706,8.32639316 0.294812312,8.7196331 L7.27203702,15.6797386 C7.69994045,16.1067538 8.37545528,16.1067538 8.80335871,15.6797386 C9.25602329,15.2277942 9.25602329,14.4750895 8.80335871,14.0223409 L2.9597299,8.1920965 C2.85372127,8.08675002 2.85372127,7.91224477 2.9597299,7.80689828 L8.80335871,1.97665389 C9.25602329,1.52470943 9.25602329,0.772004775 8.80335871,0.319256141 C8.5890201,0.106954828 8.31355243,0 8.03808476,0 C7.7618433,0 7.48637563,0.106954828 7.27203702,0.319256141 Z" id="path-1"></path>
+    </defs>
+    <g id="profi-interface" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="12-8_Профи_-Календарь-доступа" transform="translate(-902.000000, -156.000000)">
+            <g id="DEC" transform="translate(521.000000, 154.000000)">
+                <g id="Text">
+                    <g id="Icon-Copy" transform="translate(386.000000, 10.000000) scale(-1, 1) translate(-386.000000, -10.000000) translate(381.000000, 2.000000)">
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <use id="Back" fill="#007AFF" xlink:href="#path-1"></use>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
