@@ -46,9 +46,15 @@ module.exports = {
             // })
             // info = info.data
             
-            const _room = 'fdcd13b2-72ab-47cc-acf9-99f658b229cf'
+            const _room = '50bd6d29-ed8d-4619-bb32-ed446c333b30'
             // // // const _token = req.query.token
-            const _token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU2MDMwNTU2LTU0YzgtNDQ2YS1hZDQ4LTkwODI4NmZkNTNhMyIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwibmFtZSI6bnVsbCwicGhvbmUiOm51bGwsImFkcmVzcyI6bnVsbCwicGFzc3dvcmQiOiIkMmEkMDgkRkFHZXF1OXE5N3hBN3EyZC9mSllVLm5CZDdmZnFRUDZlRzY1dXoxU3hFSkF0LjJEaEpyZzYiLCJhcmNoaXZlZCI6ZmFsc2UsInN0YXR1cyI6ImFjdGl2ZSIsInR5cGUiOiJhZG1pbiIsImltYWdlIjpudWxsLCJiaW8iOm51bGwsInRva2VuIjpudWxsLCJjcmVhdGVkQXQiOiIyMDE4LTA1LTI5VDEyOjIzOjUyLjQ3N1oiLCJ1cGRhdGVkQXQiOiIyMDE4LTA1LTMxVDEyOjIxOjA3LjA3MFoiLCJpYXQiOjE1Mjc3Njk0OTUsImV4cCI6MTYxNDE2OTQ5NX0.HNaI-0IWjpTkHlcKrxBwLzegVk_hWrmk7sGQ6fgvZs8'
+            let _token
+            if (req.query.order_id === '33') {
+                _token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU2MDMwNTU2LTU0YzgtNDQ2YS1hZDQ4LTkwODI4NmZkNTNhMyIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwibmFtZSI6bnVsbCwicGhvbmUiOm51bGwsImFkcmVzcyI6bnVsbCwicGFzc3dvcmQiOiIkMmEkMDgkRkFHZXF1OXE5N3hBN3EyZC9mSllVLm5CZDdmZnFRUDZlRzY1dXoxU3hFSkF0LjJEaEpyZzYiLCJhcmNoaXZlZCI6ZmFsc2UsInN0YXR1cyI6ImFjdGl2ZSIsInR5cGUiOiJhZG1pbiIsImltYWdlIjpudWxsLCJiaW8iOm51bGwsInRva2VuIjpudWxsLCJjcmVhdGVkQXQiOiIyMDE4LTA1LTI5VDEyOjIzOjUyLjQ3N1oiLCJ1cGRhdGVkQXQiOiIyMDE4LTA1LTMxVDEyOjIxOjA3LjA3MFoiLCJpYXQiOjE1Mjc3Njk0OTUsImV4cCI6MTYxNDE2OTQ5NX0.HNaI-0IWjpTkHlcKrxBwLzegVk_hWrmk7sGQ6fgvZs8'
+            } else {
+                _token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImJmMjEyZGZiLTkyOTktNDllMi1iYzgwLTdhMzgwYTg0ZjA5MiIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwibmFtZSI6bnVsbCwicGhvbmUiOm51bGwsImFkcmVzcyI6bnVsbCwicGFzc3dvcmQiOiIkMmEkMDgkSUFIdTlITTFiYjYvY2NBUkdaWE8xT3E1NTNBdnVMeEZDTW8va0cuQkloZXRoRGlDaVRMb1ciLCJhcmNoaXZlZCI6ZmFsc2UsInN0YXR1cyI6ImFjdGl2ZSIsInR5cGUiOiJhZG1pbiIsImltYWdlIjpudWxsLCJiaW8iOm51bGwsInRva2VuIjpudWxsLCJjcmVhdGVkQXQiOiIyMDE4LTA1LTI5VDExOjIxOjIzLjIwNloiLCJ1cGRhdGVkQXQiOiIyMDE4LTA1LTMxVDA5OjQ1OjUxLjU3N1oiLCJpYXQiOjE1Mjc3NjAwMjAsImV4cCI6MTYxNDE2MDAyMH0.-cRw4lXFyq5l3N8QwOA9MpNzcuZyqgvYkB0f8TMF-bM'
+            }
+            
             res.render('textMessaging', {
                 room: _room,
                 token: _token
