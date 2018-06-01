@@ -147,7 +147,7 @@ button {
       .chat-video__send:hover, .chat-video__send:focus, .chat-video__send:active {
         outline: none; }
   .chat .complete-video-chat {
-    background: url(../img/chat.png);
+    background: url(../assets/img/chat.png);
     background-repeat: no-repeat;
     background-size: cover;
     display: flex;
@@ -251,7 +251,7 @@ button {
       margin-right: 5px;
       line-height: 1; }
   .chat .extension-video-chat {
-    background: url(../img/video-user.jpg);
+    background: url(../assets/img/video-user.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     display: flex;
@@ -357,17 +357,17 @@ button {
   .online-extension__item--button:hover, .online-extension__item--button:focus, .online-extension__item--button:active {
     background: #fff; }
 .online-extension__item .clip {
-  background-image: url("../img/icons/clip.svg"); }
+  background-image: url("../assets/img/icons/clip.svg"); }
   .online-extension__item .clip:hover, .online-extension__item .clip:focus, .online-extension__item .clip:active {
-    background-image: url("../img/icons/clip-b.svg"); }
+    background-image: url("../assets/img/icons/clip-b.svg"); }
 .online-extension__item .mike {
-  background-image: url("../img/icons/mike.svg"); }
+  background-image: url("../assets/img/icons/mike.svg"); }
   .online-extension__item .mike:hover, .online-extension__item .mike:focus, .online-extension__item .mike:active {
-    background-image: url("../img/icons/mike-b.svg"); }
+    background-image: url("../assets/img/icons/mike-b.svg"); }
 .online-extension__item .sound {
-  background-image: url("../img/icons/sound.svg"); }
+  background-image: url("../assets/img/icons/sound.svg"); }
   .online-extension__item .sound:hover, .online-extension__item .sound:focus, .online-extension__item .sound:active {
-    background-image: url("../img/icons/sound-b.svg"); }
+    background-image: url("../assets/img/icons/sound-b.svg"); }
 
 .conference-chat .modal-body {
   padding: 0 !important; }

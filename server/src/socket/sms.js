@@ -72,9 +72,9 @@ module.exports = (io) => {
 			    		socket.join(room, () => {
 			    			console.log(socket.user.id + ' connected to room: ' + room)
 							// io.to(room).emit('updateUserList', users.getUserList(room))
-							users.removeUser(socket.id)
-						    users.addUser(socket.id, socket.user.email, room)
-
+							users.removeUser(socket.user.id)
+						    users.addUser(socket.user, room)
+				  			io.emit('getRoomOnlineUsers', users.users)
 						    // io.to(room).emit('updateUserList', users.getUserList(room))
 						    // socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app', 'unread', room))
 						    socket.broadcast.to(room)

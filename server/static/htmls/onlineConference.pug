@@ -7,26 +7,38 @@ html
         link(rel="manifest" href="/manifest.json")
     body
         div(id="app")
-            div(class="modal-window")
-                div(class="chat")
-                    div(class="modal-header")
-                        div(class="chat__user")
-                            img(src="/htmls/assets/img/avatar.png" alt="" class="chat__user--img")
-                            div(class="chat__user--name")
-                                h4 Костя Сирнов
-                                span Jurist
-                                p {{messages.length}}
-                    div(class="modal-body")
-                        div(:class="smsclass(message)" v-for="(message, index) in messages")
-                            div(class="chat-video__name") {{message.from.name ? message.from.name : message.from.email}}
-                                span {{message.createdAtt}}
-                            div(class="chat-sms__item")
-                                p {{message.text}}
-                    div(class="modal-footer modal-footer-sms")
-                        input(autofocus placeholder="Введите текст сообщения" @keyup.enter="createMessage" v-model="message" type="text" name="text")
-                        button(@click="createMessage" class="chat-video__send" :disabled="disabled")
-                            img(src="/htmls/assets/img/icons/sms.svg" alt="")
-            
+            div(class="chat" :style="connectedUsers.length <= 1 ? 'display:none' : 'display:block'")
+                div(class="modal-header")
+                    div(class="chat__user")
+                        img(src="/htmls/assets/img/avatar.png" alt="" class="chat__user--img")
+                        div(class="chat__user--name")
+                            h4 Костя Смирнов
+                            span Jurist
+                            p {{messages.length}}
+                div(class="modal-body")
+                    div(:class="smsclass(message)" v-for="(message, index) in messages")
+                        div(class="chat-video__name") {{messageFrom(message)}}
+                            span {{message.createdAt}}
+                        div(class="chat-sms__item")
+                            p {{message.text}}
+                div(class="modal-footer modal-footer-sms")
+                    input(autofocus placeholder="Введите текст сообщения" @keyup.enter="createMessage" v-model="message" type="text" name="text")
+                    button(@click="createMessage" class="chat-video__send" :disabled="disabled")
+                        img(src="/htmls/assets/img/icons/sms.svg" alt="")
+
+            div(class="chat" :style="connectedUsers.length <= 1 ? 'display:block' : 'display:none'")
+                div(class="modal-body complete-video-chat")
+                    div(class="complete-video-chat__item online-broadcast-connection")
+                        div(class="online-call")
+                            div(class="online-call__title") Подготовка иска
+                            div(class="online-call__text") Онлайн эфир, 45 минут
+                        img(src="/htmls/assets/img/avatar.png" alt="" class="complete-video-chat__item--img")
+                        div(class="complete-video-chat__item--name") Костя Смирнов
+                        p(class="complete-video-chat__item--text")
+                        div(class="accept-decline")
+                            button(class="accept-decline__button")
+                                img(src="/htmls/assets/img/icons/decline.svg" alt="")
+
         script(src="https://cdn.socket.io/socket.io-1.4.5.js")
         script(src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js")
         script(src="https://unpkg.com/axios/dist/axios.min.js")
@@ -49,15 +61,23 @@ html
                       logLevel: 'debug'
                     },
                     activeRoom: '',
-                    text: ''
+                    text: '',
+                    connectedUsers: []
                 },
                 created: async function () {
+
+                    socket.on('getRoomOnlineUsers', function (usersArray) {
+                        this.connectedUsers = usersArray
+                    }.bind(this))
+
                     socket.on('errorHandle', function (msg) {
                         alert(msg.text)
                     })
+
                     socket.on('newMessage', function (msg) {
                       this.messages.push(msg)
                     }.bind(this))
+
                     socket.emit('join', this.room)
                     let response = await axios.get('/getmessages?room=' + this.room)
                     this.messages = response.data.messages
@@ -243,6 +263,13 @@ html
                             return 'chat-video chat-video-right'
                         } else {
                             return 'chat-video'
+                        }
+                    },
+                    messageFrom (_item) {
+                        if (_item.fromId === jwt_decode(this.token).id) {
+                            return 'Я'
+                        } else {
+                            return _item.from.name ? _item.from.name : _item.from.email
                         }
                     },
                     async createMessage (e) {

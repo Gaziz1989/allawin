@@ -22,6 +22,7 @@ io.use( async (socket, next) => {
     console.log('Не получилось авторизовать пользователя!')
     return next(new Error('authentication error'))
   } else {
+    user.toJSON().socketId = socket.id
     socket.user = user.toJSON()
     next()
   } 
