@@ -7,20 +7,18 @@ html
         link(rel="manifest" href="/manifest.json")
     body
         div(id="app")
-            div(id="online-extension" class="chat")
-                div(class="modal-dialog chat chat-online-call")
-                    div(class="modal-content")
-                        div(class="modal-body extension-video-chat")
-                            div(class="complete-video-chat__item")
-                                div(class="video-online-chat" id="local-media")
-                                div(class="online-extension")
-                                    button(class="online-extension-button") Продлить на 5 минут за 10000 тенге?
-                                    p 05:46 из 10:00
-                                    div(class="online-extension__item")
-                                        button(class="online-extension__item--button clip")
-                                        button(class="online-extension__item--button mike")
-                                    div(class="online-extension-button-decline")
-                                        img(src="/htmls/assets/img/icons/decline.svg" alt="")
+            div(id="online-extension" class="chat" :style="connectedUsers.length <= 1 ? 'display:none' : 'display:block'")
+                div(class="modal-body extension-video-chat")
+                    div(class="complete-video-chat__item")
+                        div(class="video-online-chat" id="local-media")
+                        div(class="online-extension")
+                            button(class="online-extension-button") Продлить на 5 минут за 10000 тенге?
+                            p 05:46 из 10:00
+                            div(class="online-extension__item")
+                                button(class="online-extension__item--button clip")
+                                button(class="online-extension__item--button mike")
+                            div(class="online-extension-button-decline")
+                                img(src="/htmls/assets/img/icons/decline.svg" alt="")
 
             div(class="chat" :style="connectedUsers.length <= 1 && fromMe ? 'display:block' : 'display:none'")
                 div(class="modal-body complete-video-chat")
@@ -95,7 +93,7 @@ html
 
                     if (this.fromMe) {
                         socket.emit('join', this.room)
-                        this.twilliocall()
+                        //- this.twilliocall()
                     }
                     
                     let response = await axios.get('/getmessages?room=' + this.room)
