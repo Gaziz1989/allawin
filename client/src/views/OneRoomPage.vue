@@ -103,7 +103,7 @@
       try {
         // https://chats-backend.mars.studio/
         // http://127.0.0.1:8081
-        Vue.prototype.$socket = io('https://chats-backend.mars.studio/?token=' + `${Auth().getToken()}`)
+        Vue.prototype.$socket = io('http://127.0.0.1:8081/?token=' + `${Auth().getToken()}`)
         this.$socket.on('newMessage', function (msg) {
           this.messages.push(msg)
         }.bind(this))
