@@ -55,10 +55,10 @@ module.exports = {
                 _token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFiYzcxYWUzLWI3ODMtNDNiOC04M2JhLWE4YzA3ZTE4ZmFhNCIsImVtYWlsIjoidXNlcjFAZ21haWwuY29tIiwibmFtZSI6bnVsbCwicGhvbmUiOm51bGwsImFkcmVzcyI6bnVsbCwicGFzc3dvcmQiOiIkMmEkMDgkMnlmODc5Unp0UC96ZHZySDZDOGNjZWliUi5xcnZHbXNyV1VyRkhhallmR2J4ZWxOUjZtajIiLCJhcmNoaXZlZCI6ZmFsc2UsInN0YXR1cyI6ImFjdGl2ZSIsInR5cGUiOiJ1c2VyIiwiaW1hZ2UiOm51bGwsImJpbyI6bnVsbCwidG9rZW4iOm51bGwsImNyZWF0ZWRBdCI6IjIwMTgtMDUtMjlUMTI6MjM6NTIuNDc4WiIsInVwZGF0ZWRBdCI6IjIwMTgtMDUtMjlUMTI6MjM6NTIuNDc4WiIsImlhdCI6MTUyNzc2OTMxMSwiZXhwIjoxNjE0MTY5MzExfQ.anUtljrDILpg8kcHwai0s7tnvIudsR7kFAUR5EjK2Ow'
             }
             
-            res.render('onlineSmsChat', {
+            res.render('onlineVideoChat', {
                 room: _room,
                 token: _token,
-                fromMe: req.query.fromMe
+                fromMe: req.query.fromMe ? req.query.fromMe : false
             })
             // res.sendFile(path.resolve(__dirname, '../../static/htmls/chat.html'))
         } catch (error) {

@@ -7,24 +7,50 @@ html
         link(rel="manifest" href="/manifest.json")
     body
         div(id="app")
-            div(class="chat")
-                div(class="modal-header")
-                    div(class="chat__user")
-                        img(src="/htmls/assets/img/avatar.png" alt="" class="chat__user--img")
-                        div(class="chat__user--name")
-                            h4 Костя Смирнов
-                            span Jurist
-                            p {{messages.length}}
-                div(class="modal-body")
-                    div(:class="smsclass(message)" v-for="(message, index) in messages")
-                        div(class="chat-video__name") {{messageFrom(message)}}
-                            span {{message.createdAt}}
-                        div(class="chat-sms__item")
-                            p {{message.text}}
-                div(class="modal-footer modal-footer-sms")
-                    input(autofocus placeholder="Введите текст сообщения" @keyup.enter="createMessage" v-model="message" type="text" name="text")
-                    button(@click="createMessage" class="chat-video__send" :disabled="disabled")
-                        img(src="/htmls/assets/img/icons/sms.svg" alt="")
+            div(id="online-extension" class="chat")
+                div(class="modal-dialog chat chat-online-call")
+                    div(class="modal-content")
+                        div(class="modal-body extension-video-chat")
+                            div(class="complete-video-chat__item")
+                                div(class="video-online-chat" id="local-media")
+                                div(class="online-extension")
+                                    button(class="online-extension-button") Продлить на 5 минут за 10000 тенге?
+                                    p 05:46 из 10:00
+                                    div(class="online-extension__item")
+                                        button(class="online-extension__item--button clip")
+                                        button(class="online-extension__item--button mike")
+                                    div(class="online-extension-button-decline")
+                                        img(src="/htmls/assets/img/icons/decline.svg" alt="")
+
+            div(class="chat" :style="connectedUsers.length <= 1 && fromMe ? 'display:block' : 'display:none'")
+                div(class="modal-body complete-video-chat")
+                    div(class="complete-video-chat__item online-broadcast-connection")
+                        div(class="online-call")
+                            div(class="online-call__title") Подготовка иска
+                            div(class="online-call__text") Соединение ...
+                        img(src="/htmls/assets/img/avatar.png" alt="" class="complete-video-chat__item--img")
+                        div(class="complete-video-chat__item--name") Костя Смирнов
+                        p(class="complete-video-chat__item--text")
+                        div(class="accept-decline")
+                            button(class="accept-decline__button")
+                                img(src="/htmls/assets/img/icons/decline.svg" alt="")
+
+            div(class="chat" :style="!fromMe && !accepted ? 'display:block' : 'display:none'")
+                div(class="modal-body complete-video-chat")
+                    div(class="complete-video-chat__item")
+                        div(class="online-call")
+                            div(class="online-call__title") Подготовка иска
+                            div(class="online-call__text") Соединение ...
+                        img(src="/htmls/assets/img/avatar.png" alt="" class="complete-video-chat__item--img")
+                        div(class="complete-video-chat__item--name") Костя Смирнов
+                        p(class="complete-video-chat__item--text")
+                        div(class="accept-decline")
+                            button(class="accept-decline__button" )
+                                img(src="/htmls/assets/img/icons/decline.svg" alt="")
+                                p Отклонить
+                            button(class="accept-decline__button" @click="accept")
+                                img(src="/htmls/assets/img/icons/accept.svg" alt="")
+                                p Принять
 
         script(src="https://cdn.socket.io/socket.io-1.4.5.js")
         script(src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js")
@@ -67,8 +93,11 @@ html
                       this.messages.push(msg)
                     }.bind(this))
 
-                    socket.emit('join', this.room)
-
+                    if (this.fromMe) {
+                        socket.emit('join', this.room)
+                        this.twilliocall()
+                    }
+                    
                     let response = await axios.get('/getmessages?room=' + this.room)
                     this.messages = response.data.messages
                 },
@@ -158,17 +187,13 @@ html
                         if (this.previewTracks) {
                             this.connectOptions.tracks = this.previewTracks
                         }
-                        let response1 = await MessagesService.gettwiliotoken()
-                        this.$video.connect(response1.data.token, this.connectOptions).then(this.roomJoined, (error) => {
-                            console.log('Could not connect to Twilio: ' + error.message)
+                        let response1 = await axios('/gettwilliotoken', {
+                            method:'get',
+                            headers: {
+                                Authorization: `Bearer ${this.token}`
+                            }
                         })
-                    },
-                    async twilliovoicecall () {
-                        if (this.previewTracks) {
-                            this.connectOptions.tracks = this.previewTracks
-                        }
-                        let response1 = await MessagesService.gettwiliotoken()
-                        this.$video.connect(response1.data.token, this.connectOptions).then(this.roomJoinedAudio, (error) => {
+                        this.$video.connect(response1.data.token, this.connectOptions).then(this.roomJoined, (error) => {
                             console.log('Could not connect to Twilio: ' + error.message)
                         })
                     },
@@ -261,6 +286,10 @@ html
                         } else {
                             return _item.from.name ? _item.from.name : _item.from.email
                         }
+                    },
+                    accept () {
+                        this.accepted = !this.accepted
+                        socket.emit('join', this.room)
                     },
                     async createMessage (e) {
                         try {

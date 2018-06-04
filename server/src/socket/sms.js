@@ -70,7 +70,7 @@ module.exports = (io) => {
 		    	try {
 		    		if (room) {
 			    		socket.join(room, () => {
-			    			console.log(socket.user.id + ' connected to room: ' + room)
+				  			console.log(socket.user.email + ' connected to room: ' + room)
 							// io.to(room).emit('updateUserList', users.getUserList(room))
 							users.removeUser(socket.user.id)
 						    users.addUser(socket.user, room)
@@ -123,6 +123,7 @@ module.exports = (io) => {
 			})
 			socket.on('uploadFile', (file) => {
 				try {
+					console.log(file)
 					const _length = file.filename.split('.').length
 					const extension = file.filename.split('.')[_length - 1]
 					const extArray = ['mp3', 'png', 'json', 'docx', 'doc', 'txt', 'rtf', 'docm', 'ppt', 'pptx', 'pptm', 'xps', 'potx', 'potm', 'pot', 'ppsx', 'pps', 'ppa', 'ppam', 'odp', 'pdf', 'xlsx', 'xlsm', 'xlsb', 'xlxt', 'xltm', 'xls', 'xlt', 'xml','xlam','xla','xlw']
@@ -175,6 +176,7 @@ module.exports = (io) => {
 
 			socket.on('uploadVideo', (file) => {
 				try {
+					console.log(file)
 					const _length = file.filename.split('.').length
 					const extension = file.filename.split('.')[_length - 1]
 					const extArray = ['avi', 'wmv', 'mov', 'asf', 'mpeg', 'mp4']
@@ -287,6 +289,7 @@ module.exports = (io) => {
 
 			socket.on('uploadAudio', (file) => {
 				try {
+					console.log(file)
 					const _length = file.filename.split('.').length
 					const extension = file.filename.split('.')[_length - 1]
 					const extArray = ['mp3', 'wma', 'aiff', 'flac', 'm4a', 'aac', 'm4a']
@@ -339,6 +342,7 @@ module.exports = (io) => {
 
 			socket.on('uploadImage', async (file) => {
 				try {
+					console.log(file)
 					const _length = file.filename.split('.').length
 					const extension = file.filename.split('.')[_length - 1]
 					let name = `${uuidv4().split('-').join('')}.${extension}`
@@ -396,6 +400,7 @@ module.exports = (io) => {
 			socket.on('disconnect', (room) => {
 				try {
 					socket.leave(room, () => {
+						users.removeUser(socket.user.id)
 						socket.broadcast.to(room)
 						.emit('newMessage', {text: `${socket.user.email} leave the room`,
 						from: 'Allawin'})
