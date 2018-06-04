@@ -46,13 +46,13 @@ module.exports = {
             // })
             // info = info.data
             
-            const _room = 'fdcd13b2-72ab-47cc-acf9-99f658b229cf'
+            const _room = '50bd6d29-ed8d-4619-bb32-ed446c333b30'
             // // // const _token = req.query.token
             let _token
             if (req.query.order_id === '33') {
                 _token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImJmMjEyZGZiLTkyOTktNDllMi1iYzgwLTdhMzgwYTg0ZjA5MiIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwibmFtZSI6bnVsbCwicGhvbmUiOm51bGwsImFkcmVzcyI6bnVsbCwicGFzc3dvcmQiOiIkMmEkMDgkSUFIdTlITTFiYjYvY2NBUkdaWE8xT3E1NTNBdnVMeEZDTW8va0cuQkloZXRoRGlDaVRMb1ciLCJhcmNoaXZlZCI6ZmFsc2UsInN0YXR1cyI6ImFjdGl2ZSIsInR5cGUiOiJhZG1pbiIsImltYWdlIjpudWxsLCJiaW8iOm51bGwsInRva2VuIjpudWxsLCJjcmVhdGVkQXQiOiIyMDE4LTA1LTI5VDExOjIxOjIzLjIwNloiLCJ1cGRhdGVkQXQiOiIyMDE4LTA1LTMxVDA5OjQ1OjUxLjU3N1oiLCJpYXQiOjE1Mjc3NjAwMjAsImV4cCI6MTYxNDE2MDAyMH0.-cRw4lXFyq5l3N8QwOA9MpNzcuZyqgvYkB0f8TMF-bM'
             } else {
-                _token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQwZTU4ZDdjLTQwNTQtNGE4Mi1hZDE0LTgwZjczMzg1YTBhOCIsImVtYWlsIjoidXNlckBnbWFpbC5jb20iLCJuYW1lIjpudWxsLCJwaG9uZSI6bnVsbCwiYWRyZXNzIjpudWxsLCJwYXNzd29yZCI6IiQyYSQwOCRoOGRGcEt1ZHdWR3Z0SENaY3BBNDZlek1mSFJLMWZWaVlvZ2N6UTUzWUd4Q0l3L3NlekdTMiIsImFyY2hpdmVkIjpmYWxzZSwic3RhdHVzIjoiYWN0aXZlIiwidHlwZSI6InVzZXIiLCJpbWFnZSI6bnVsbCwiYmlvIjpudWxsLCJ0b2tlbiI6bnVsbCwiY3JlYXRlZEF0IjoiMjAxOC0wNS0yOVQxMToyMToyMy4yMDhaIiwidXBkYXRlZEF0IjoiMjAxOC0wNS0yOVQxMToyMToyMy4yMDhaIiwiaWF0IjoxNTI3NzYwMjIwLCJleHAiOjE2MTQxNjAyMjB9.b9QgvOmmdssoyCrceZF2QiOgpgo86J8qdNoAcvSPaEo'
+                _token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImRlMjhhNGVlLTBhMTUtNDI5ZS05Y2U1LWVlYTU4ZmVlMzk1ZSIsImVtYWlsIjoicHJvQGdtYWlsLmNvbSIsIm5hbWUiOm51bGwsInBob25lIjpudWxsLCJhZHJlc3MiOm51bGwsInBhc3N3b3JkIjoiJDJhJDA4JEtUREZ5czBxQlZhaEhZNVJ4bGpZZnVrSG42azBGRzBFTU9MU1FqV1dqdGtpNDkuZUxqRHFtIiwiYXJjaGl2ZWQiOmZhbHNlLCJzdGF0dXMiOiJhY3RpdmUiLCJ0eXBlIjoicHJvIiwiaW1hZ2UiOm51bGwsImJpbyI6bnVsbCwidG9rZW4iOm51bGwsImNyZWF0ZWRBdCI6IjIwMTgtMDUtMjlUMTE6MjE6MjMuMjEwWiIsInVwZGF0ZWRBdCI6IjIwMTgtMDUtMzBUMDc6MTY6MjIuODMzWiIsImlhdCI6MTUyNzY2NjY2MywiZXhwIjoxNjE0MDY2NjYzfQ.NJfrrxska20qOav1q3TqB3mvoIqjgTVWq7jRcZ6vY0Q'
             }
             
             res.render('onlineSmsChat', {

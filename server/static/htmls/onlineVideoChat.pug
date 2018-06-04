@@ -293,7 +293,6 @@ html
                     },
                     async createMessage (e) {
                         try {
-                            console.log(e.keyCode)                            
                             await socket.emit('createMessage', ({
                                 message: this.message,
                                 room: this.room
