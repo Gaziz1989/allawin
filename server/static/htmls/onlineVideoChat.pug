@@ -82,6 +82,9 @@ html
 
                     socket.on('getRoomOnlineUsers', function (usersArray) {
                         this.connectedUsers = usersArray
+                        if (this.connectedUsers.length > 1 && this.fromMe) {
+                            this.twilliocall()
+                        }
                     }.bind(this))
 
                     socket.on('errorHandle', function (msg) {
@@ -94,9 +97,8 @@ html
 
                     if (this.fromMe) {
                         socket.emit('join', this.room)
-                        this.twilliocall()
                     }
-                    
+
                     let response = await axios.get('/getmessages?room=' + this.room)
                     this.messages = response.data.messages
                 },
@@ -289,6 +291,7 @@ html
                     accept () {
                         this.accepted = !this.accepted
                         socket.emit('join', this.room)
+                        this.twilliocall()
                     },
                     async createMessage (e) {
                         try {
