@@ -5,6 +5,7 @@ html
         link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css")
         link(rel="stylesheet" href="/htmls/css/chats.css")
         link(rel="manifest" href="/manifest.json")
+        script(src="//media.twiliocdn.com/sdk/js/video/v1/twilio-video.min.js")
     body
         div(id="app")
             div(id="online-extension" class="chat" :style="connectedUsers.length <= 1 ? 'display:none' : 'display:block'")
@@ -91,9 +92,9 @@ html
                       this.messages.push(msg)
                     }.bind(this))
 
-                    if (this.fromMe) {
+                    if (this.fromMe && this.connectedUsers.length >1) {
                         socket.emit('join', this.room)
-                        //- this.twilliocall()
+                        this.twilliocall()
                     }
                     
                     let response = await axios.get('/getmessages?room=' + this.room)
@@ -127,8 +128,8 @@ html
                     },
                     roomJoined (room) {
                         this.activeRoom = room
-                        console.log(`Joined as '` + this.$auth.currentUser().email + `'`)
-                        document.getElementById('button-leave').style.display = 'inline'
+                        //- console.log(`Joined as '` + this.$auth.currentUser().email + `'`)
+                        //- document.getElementById('button-leave').style.display = 'inline'
                         // Attach LocalParticipant's Tracks, if not already attached.
                         var previewContainer = document.getElementById('local-media')
                         if (!previewContainer.querySelector('video')) {
@@ -191,7 +192,7 @@ html
                                 Authorization: `Bearer ${this.token}`
                             }
                         })
-                        this.$video.connect(response1.data.token, this.connectOptions).then(this.roomJoined, (error) => {
+                        Twilio.Video.connect(response1.data.token, this.connectOptions).then(this.roomJoined, (error) => {
                             console.log('Could not connect to Twilio: ' + error.message)
                         })
                     },
