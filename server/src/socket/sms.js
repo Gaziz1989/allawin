@@ -43,7 +43,6 @@ let writeFilePro = function (preview, videoSize, filename) {
 let readFilePro = function (filename) {
   return new Promise(function (resolve, reject) {
     fs.readFile(filename, (error, data) => {
-    	console.log(data)
 	  if(error) {
 	  	console.log(error)
 	  }
@@ -215,17 +214,19 @@ module.exports = (io) => {
 								})
 							})
 							.then(async data => {
-								let previewpath = await readFilePro(filepath)
-								let previewpath1 = await readFilePro(data._previewpath1)
-								let previewpath2 = await readFilePro(data._previewpath2)
+								let bigBuffer = await readFilePro(filepath)
+								let middleBuffer = await readFilePro(data._previewpath1)
+								let smallBuffer = await readFilePro(data._previewpath2)
+								let middleFilePath = data._previewpath1
+								let smallFilePath = data._previewpath2
 								return ({
-									previewpath, previewpath1, previewpath2
+									bigBuffer, middleBuffer, smallBuffer, middleFilePath, smallFilePath
 								})
 							})
 							.then(async data => {
-								let big = await uploadFile(name, data.previewpath)
-								let middle = await uploadFile('600_' + name, data.previewpath1)
-								let small = await uploadFile('300_' + name, data.previewpath2)
+								let big = await uploadFile(name, data.bigBuffer)
+								let middle = await uploadFile('600_' + name, data.middleBuffer)
+								let small = await uploadFile('300_' + name, data.smallBuffer)
 		  						Message.create({
 									text: file.filename,
 									fromId: socket.user.id,
@@ -257,7 +258,7 @@ module.exports = (io) => {
 											})
 										}
 									})
-									fs.unlink(_previewpath1, (error) => {
+									fs.unlink(data.middleFilePath, (error) => {
 										if (error) {
 											console.log(error)
 											return socket.emit('errorHandle', {
@@ -265,7 +266,7 @@ module.exports = (io) => {
 											})
 										}
 									})
-									fs.unlink(_previewpath2, (error) => {
+									fs.unlink(data.smallFilePath, (error) => {
 										if (error) {
 											console.log(error)
 											return socket.emit('errorHandle', {
