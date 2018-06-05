@@ -9,7 +9,8 @@ html
     body
         div(id="app")
             div(id="online-extension" class="chat" :style="connectedUsers.length <= 1 ? 'display:none' : 'display:block'")
-                div(class="modal-body extension-video-chat")
+                div(class="modal-body extension-video-chat" id="remote-media")
+                    //- div(id="remote-media" style="height: 100%; width: 100%; position: absolute; z-index: 0")
                     div(class="complete-video-chat__item")
                         div(class="video-online-chat" id="local-media")
                         div(class="online-extension")
@@ -69,8 +70,12 @@ html
                     message: '',
                     previewTracks: '',
                     connectOptions: {
-                      name: '',
-                      logLevel: 'debug'
+                      name: '#{room}',
+                      logLevel: 'debug',
+                      video: {
+                        width: 90,
+                        height: 120
+                      }
                     },
                     activeRoom: '',
                     text: '',
