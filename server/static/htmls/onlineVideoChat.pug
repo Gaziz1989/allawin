@@ -92,7 +92,7 @@ html
                       this.messages.push(msg)
                     }.bind(this))
 
-                    if (this.fromMe && this.connectedUsers.length >1) {
+                    if (this.fromMe) {
                         socket.emit('join', this.room)
                         this.twilliocall()
                     }
