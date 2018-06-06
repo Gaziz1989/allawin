@@ -8,10 +8,10 @@ html
         script(src="//media.twiliocdn.com/sdk/js/video/v1/twilio-video.min.js")
     body
         div(id="app")
-            div(id="online-extension" class="chat" :style="connectedUsers.length <= 1 ? 'display:none' : 'display:block'")
-                div(class="modal-body extension-video-chat" id="remote-media")
-                    //- div(id="remote-media" style="height: 100%; width: 100%; position: absolute; z-index: 0")
-                    div(class="complete-video-chat__item")
+            div(id="online-extension" class="chat" :style="connectedUsers.length <= 1 ? 'display:none' : 'display:flex'")
+                div(id="remote-media" style="z-index: 0")
+                div(class="modal-body extension-video-chat" style="z-index: 99")
+                    div(class="complete-video-chat__item" style="z-index: 99")
                         div(class="video-online-chat" id="local-media")
                         div(class="online-extension")
                             button(class="online-extension-button") Продлить на 5 минут за 10000 тенге?
@@ -22,7 +22,7 @@ html
                             div(class="online-extension-button-decline")
                                 img(src="/htmls/assets/img/icons/decline.svg" alt="")
 
-            div(class="chat" :style="connectedUsers.length <= 1 && fromMe ? 'display:block' : 'display:none'")
+            div(class="chat" :style="connectedUsers.length <= 1 && fromMe ? 'display:flex' : 'display:none'")
                 div(class="modal-body complete-video-chat")
                     div(class="complete-video-chat__item online-broadcast-connection")
                         div(class="online-call")
@@ -35,7 +35,7 @@ html
                             button(class="accept-decline__button")
                                 img(src="/htmls/assets/img/icons/decline.svg" alt="")
 
-            div(class="chat" :style="!fromMe && !accepted ? 'display:block' : 'display:none'")
+            div(class="chat" :style="!fromMe && !accepted ? 'display:flex' : 'display:none'")
                 div(class="modal-body complete-video-chat")
                     div(class="complete-video-chat__item")
                         div(class="online-call")
@@ -71,10 +71,9 @@ html
                     previewTracks: '',
                     connectOptions: {
                       name: '#{room}',
-                      logLevel: 'debug',
+                      //- logLevel: 'debug',
                       video: {
-                        width: 90,
-                        height: 120
+                        width: 600
                       }
                     },
                     activeRoom: '',
@@ -141,17 +140,22 @@ html
                         var previewContainer = document.getElementById('local-media')
                         if (!previewContainer.querySelector('video')) {
                             this.attachParticipantTracks(room.localParticipant, previewContainer)
+                            let node = previewContainer.lastChild
+                            node.className += "" + "localMediaClass"
                         }
+                        console.log(room)
                         // Attach the Tracks of the Room's Participants.
-
                         if (room.participants.length > 0) {
                             room.participants.map((participant) => {
-                                console.log(`Already in Room: '` + participant.identity + `'`)
-                                var previewContainer = document.getElementById('remote-media')
-                                this.attachParticipantTracks(participant, previewContainer)
+                                console.log(participant)
+                                //- console.log(`Already in Room: '` + participant.identity + `'`)
+                                //- var previewContainer = document.getElementById('remote-media')
+                                //- this.attachParticipantTracks(participant, previewContainer)
+                                //- let node = previewContainer.lastChild
+                                //- node.className += "" + "remoteMediaClass"
                             })
                         }
-                        // When a Participant joins the Room, console.log the event.
+                          // When a Participant joins the Room, console.log the event.
                         room.on('participantConnected', (participant) => {
                             console.log(`Joining: '` + participant.identity + `'`)
                         })
@@ -160,6 +164,8 @@ html
                             console.log(participant.identity + ` added track: ` + track.kind)
                             var previewContainer = document.getElementById('remote-media')
                             this.attachTracks([track], previewContainer)
+                            let node = previewContainer.lastChild
+                            node.className += "" + "remoteMediaClass"
                         })
                         // When a Participant removes a Track, detach it from the DOM.
                         room.on('trackRemoved', (track, participant) => {
@@ -185,8 +191,6 @@ html
                                 room.participants.map(this.detachParticipantTracks)
                             }
                             this.activeRoom = null
-                            document.getElementById('button-join').style.display = 'inline'
-                            document.getElementById('button-leave').style.display = 'none'
                         })
                     },
                     async twilliocall () {

@@ -2,10 +2,14 @@ button {
   cursor: pointer; }
 
 .chat {
-  max-width: 600px !important;
-  width: 100% !important;
+  /*max-width: 600px !important;*/
+  /*width: 100% !important;*/
+  display: flex;
+  flex-direction: column;
+  width: 580px;
   min-height: 654px !important;
-  margin: 6% auto 0 !important; }
+  margin: 6% auto 0 !important; 
+}
   .chat .modal-content {
     min-height: 654px;
     border-radius: 0;
@@ -17,11 +21,12 @@ button {
     border-top: 3px solid #ededed;
     background: #fff; }
   .chat .modal-body {
-    padding: 40px 20px !important;
-    background: #f9f9f9;
+/*    padding: 40px 20px !important;
+*//*    background: #f9f9f9;
     position: relative;
-    height: 520px;
-    overflow-y: auto; }
+    /*height: 520px;*/
+    /*overflow-y: auto;*/
+  }
   .chat-sms__item {
     background: #fff;
     padding: 15px;
@@ -151,6 +156,7 @@ button {
     background-repeat: no-repeat;
     background-size: cover;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
@@ -251,12 +257,13 @@ button {
       margin-right: 5px;
       line-height: 1; }
   .chat .extension-video-chat {
-    background: url(../assets/img/video-user.jpg);
+    /*background: url(../assets/img/video-user.jpg);
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: cover;*/
     display: flex;
-    align-items: flex-end;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
     text-align: center;
     color: #fff; }
   .chat .conference-connection {
@@ -318,14 +325,15 @@ button {
 .video-online-chat {
   position: absolute;
   top: 30px;
-  right: 30px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  width: 94px;
-  height: 120px; }
+  right: 15px;
+ }
   .video-online-chat img {
     width: 100%;
     height: 100%; }
 
+.online-extension {
+  padding-top: 25%;
+}
 .online-extension-button {
   width: 320px;
   height: 44px;
@@ -3018,3 +3026,18 @@ main .menuLeft__item__badge {
   top: 22px;
   right: 20px;
   cursor: pointer; }
+  
+#remote-media {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 0;
+}
+
+.localMediaClass {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  height: 120px;
+}
+.remoteMediaClass {
+  height: 100%;
+}
