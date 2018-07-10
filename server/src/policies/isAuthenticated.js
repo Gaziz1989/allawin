@@ -1,12 +1,10 @@
-const { User } = require('../models')
+const db = require('../db')
 
 module.exports = async function (req, res, next) {
-  let token = await req.headers.authorization.split(' ')[1]
-  const user = await User.findOne({
-    where: {
-      token
-    }
-  })
+  let access_token = await req.headers.authorization.split(' ')[1]
+  const query = await db.query("SELECT * FROM \"user\" WHERE access_token = $1", [access_token])
+  let user = query.rows[0]
+
   if (!user) {
       res.status(403).send({
         error: 'Вы не авторизованы!'
@@ -14,14 +12,5 @@ module.exports = async function (req, res, next) {
   } else {
     req.user = user
     next()
-  } 
-  // passport.authenticate('jwt', function (err, user) {
-  //   if (err || !user) {
-  //     res.status(403).send({
-  //       error: 'Вы не авторизованы!'
-  //     })
-  //   } else {
-
-  //   }
-  // })(req, res, next)
+  }
 }

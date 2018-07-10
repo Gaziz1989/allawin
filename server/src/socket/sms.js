@@ -1,6 +1,6 @@
-const { User, Message, Room, RoomSubscriber } = require('../models')
 const { Users } = require('../config/users')
 const multiparty = require('multiparty')
+const db = require('../db')
 const fs = require('fs')
 const users = new Users()
 const path = require('path')
@@ -11,9 +11,9 @@ const uuidv4 = require('uuid/v4')
 const AWS = require('aws-sdk')
 const spacesEndpoint = new AWS.Endpoint('nyc3.digitaloceanspaces.com')
 const s3 = new AWS.S3({
-    endpoint: spacesEndpoint,
-    accessKeyId: '7EPP3JFIRC4EHZY3VVDO',
-    secretAccessKey: 'JYLFXgCTusmGtGIh+qO74h/h598bKnTqC71E0gHjlCM'
+	endpoint: spacesEndpoint,
+	accessKeyId: '7EPP3JFIRC4EHZY3VVDO',
+	secretAccessKey: 'JYLFXgCTusmGtGIh+qO74h/h598bKnTqC71E0gHjlCM'
 })
 let locationCreator = (data) => {
 	if (data.Location.split('//')[0] === 'https:') {
@@ -41,14 +41,14 @@ let writeFilePro = function (preview, videoSize, filename) {
 	})
 }
 let readFilePro = function (filename) {
-  return new Promise(function (resolve, reject) {
-    fs.readFile(filename, (error, data) => {
-	  if(error) {
-	  	console.log(error)
-	  }
-      resolve(new Buffer(data, 'binary'))
-    })
-  })
+	return new Promise(function (resolve, reject) {
+		fs.readFile(filename, (error, data) => {
+			if(error) {
+				console.log(error)
+			}
+			resolve(new Buffer(data, 'binary'))
+		})
+	})
 }
 let uploadFile = function (_name, _bufer) {
 	return new Promise (function (resolve, reject) {
@@ -69,56 +69,73 @@ let uploadFile = function (_name, _bufer) {
 
 module.exports = (io) => {
 
-  	io.on('connection', (socket) => {
-  		if (socket.connected) {
-		    socket.on('join', async (room) => {
-		    	try {
-		    		if (room) {
-			    		socket.join(room, () => {
-				  			console.log(socket.user.email + ' connected to room: ' + room)
+	io.on('connection', (socket) => {
+		if (socket.connected) {
+			socket.on('join', async (room) => {
+				try {
+					if (room) {
+						socket.join(room, () => {
+							console.log(socket.user.email + ' connected to room: ' + room)
 							// io.to(room).emit('updateUserList', users.getUserList(room))
 							users.removeUser(socket.user.id)
-						    users.addUser(socket.user, room)
-				  			io.emit('getRoomOnlineUsers', users.users)
+							users.addUser(socket.user, room)
+							io.emit('getRoomOnlineUsers', users.users)
 						    // io.to(room).emit('updateUserList', users.getUserList(room))
 						    // socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app', 'unread', room))
 						    socket.broadcast.to(room)
-						      .emit('newMessage', {text: `${socket.user.email} has joined`,
-						      	from: 'Allawin'})
-			    		})
-			    	}
-		    	} catch (error) {
-		    		console.log(error)
-		    		socket.emit('errorHandle', {
+						    .emit('newMessage', {text: `${socket.user.email} has joined`,
+						    	from: 'Allawin'})
+						})
+					}
+				} catch (error) {
+					console.log(error)
+					socket.emit('errorHandle', {
 						text: error
 					})
-		    	}
+				}
 			})
 
 			socket.on('createMessage', async (msg) => {
 				try {
 					// let user = users.getUser(socket.id)
-					Message.create({
-						text: msg.message,
-						fromId: socket.user.id,
-						roomId: msg.room,
-						type: 'text'
-					}).then(async created => {
-						let message = await Message.findOne({
-							where: {
-			                    id: created.id
-			                },
-			                include: [
-			                    {
-			                        model: User,
-			                        as: 'from'
-			                    }
-			                ]
-						})
-						delete message.toJSON().from.token
-						delete message.toJSON().from.password
-						io.to(msg.room).emit('newMessage', message.toJSON())
-					})
+					let query = await db.query("INSERT INTO message (text, fromid, roomid, type) VALUES ($1, $2, $3, $4) RETURNING id", [msg.message, socket.user.id, msg.room, 'text'])
+					let query2 = await db.query("SELECT *, msg.id as msg_id FROM message msg INNER JOIN \"user\" usr ON usr.id=msg.fromid INNER JOIN user_profile usr_prf ON usr_prf.user_id=msg.fromid WHERE msg.id=$1;", [query.rows[0].id])
+					let message = {
+						id: query2.rows[0].msg_id,
+						text: query2.rows[0].text,
+						status: query2.rows[0].status,
+						type: query2.rows[0].type,
+						file: query2.rows[0].file,
+						preview1: query2.rows[0].preview1,
+						preview2: query2.rows[0].preview2,
+						fromid: query2.rows[0].fromid,
+						roomid: query2.rows[0].roomid,
+						createdat: query2.rows[0].createdat,
+						from: {
+							username: query2.rows[0].username,
+							email: query2.rows[0].email,
+							curency: query2.rows[0].curency,
+							user_id: query2.rows[0].user_id,
+							firstname: query2.rows[0].firstname,
+							middlename: query2.rows[0].middlename,
+							lastname: query2.rows[0].lastname,
+							avatar_path: query2.rows[0].avatar_path,
+							avatar_base_url: query2.rows[0].avatar_base_url,
+							locale: query2.rows[0].locale,
+							gender: query2.rows[0].gender,
+							is_professional: query2.rows[0].is_professional,
+							subcategory_id: query2.rows[0].subcategory_id,
+							experience: query2.rows[0].experience,
+							bday: query2.rows[0].bday,
+							bio: query2.rows[0].bio,
+							video: query2.rows[0].video,
+							phone: query2.rows[0].phone,
+							city_id: query2.rows[0].city_id,
+							avatar: query2.rows[0].avatar,
+							rating: query2.rows[0].rating
+						}
+					}
+					io.to(msg.room).emit('newMessage', message)
 				} catch (error) {
 					console.log(error)
 					socket.emit('errorHandle', {
@@ -147,7 +164,7 @@ module.exports = (io) => {
 						Body: file.file,
 						ACL: "public-read"
 					}, function(err, data) {
-  						Message.create({
+						Message.create({
 							text: file.filename,
 							fromId: socket.user.id,
 							roomId: file.room,
@@ -156,14 +173,14 @@ module.exports = (io) => {
 						}).then(async created => {
 							let message = await Message.findOne({
 								where: {
-				                    id: created.id
-				                },
-				                include: [
-				                    {
-				                        model: User,
-				                        as: 'from'
-				                    }
-				                ]
+									id: created.id
+								},
+								include: [
+								{
+									model: User,
+									as: 'from'
+								}
+								]
 							})
 							delete message.toJSON().from.token
 							delete message.toJSON().from.password
@@ -226,25 +243,25 @@ module.exports = (io) => {
 								let big = await uploadFile(name, data.bigBuffer)
 								let middle = await uploadFile('600_' + name, data.middleBuffer)
 								let small = await uploadFile('300_' + name, data.smallBuffer)
-		  						Message.create({
+								Message.create({
 									text: file.filename,
 									fromId: socket.user.id,
 									roomId: file.room,
 									file: locationCreator(big),
-								    preview1: locationCreator(middle),
-								    preview2: locationCreator(small),
+									preview1: locationCreator(middle),
+									preview2: locationCreator(small),
 									type: 'video'
 								}).then(async created => {
 									let message = await Message.findOne({
 										where: {
-						                    id: created.id
-						                },
-						                include: [
-						                    {
-						                        model: User,
-						                        as: 'from'
-						                    }
-						                ]
+											id: created.id
+										},
+										include: [
+										{
+											model: User,
+											as: 'from'
+										}
+										]
 									})
 									delete message.toJSON().from.token
 									delete message.toJSON().from.password
@@ -312,7 +329,7 @@ module.exports = (io) => {
 						Body: file.audio,
 						ACL: 'public-read'
 					}, function(err, data) {
-  						Message.create({
+						Message.create({
 							text: file.filename,
 							fromId: socket.user.id,
 							roomId: file.room,
@@ -321,14 +338,14 @@ module.exports = (io) => {
 						}).then(async created => {
 							let message = await Message.findOne({
 								where: {
-				                    id: created.id
-				                },
-				                include: [
-				                    {
-				                        model: User,
-				                        as: 'from'
-				                    }
-				                ]
+									id: created.id
+								},
+								include: [
+								{
+									model: User,
+									as: 'from'
+								}
+								]
 							})
 							delete message.toJSON().from.token
 							delete message.toJSON().from.password
@@ -372,20 +389,20 @@ module.exports = (io) => {
 						fromId: socket.user.id,
 						roomId: file.room,
 						file: locationCreator(big),
-					    preview1: locationCreator(middle),
-					    preview2: locationCreator(small),
+						preview1: locationCreator(middle),
+						preview2: locationCreator(small),
 						type: 'image'
 					}).then(async created => {
 						let message = await Message.findOne({
 							where: {
-			                    id: created.id
-			                },
-			                include: [
-			                    {
-			                        model: User,
-			                        as: 'from'
-			                    }
-			                ]
+								id: created.id
+							},
+							include: [
+							{
+								model: User,
+								as: 'from'
+							}
+							]
 						})
 						delete message.toJSON().from.token
 						delete message.toJSON().from.password
@@ -399,14 +416,15 @@ module.exports = (io) => {
 				}
 			})
 
-			socket.on('disconnect', (room) => {
+			socket.on('leaveRoom', (room) => {
 				try {
 					socket.leave(room, () => {
 						users.removeUser(socket.user.id)
 						socket.broadcast.to(room)
 						.emit('newMessage', {text: `${socket.user.email} leave the room`,
-						from: 'Allawin'})
+							from: 'Allawin'})
 					})
+					// socket.disconnect(0)
 				} catch (error) {
 					console.log(error)
 					socket.emit('errorHandle', {
@@ -414,8 +432,8 @@ module.exports = (io) => {
 					})
 				}
 			})
-  		} else {
-        	return new Error("not connected")
-  		}
-  	})
+		} else {
+			return new Error("not connected")
+		}
+	})
 }

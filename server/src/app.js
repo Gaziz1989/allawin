@@ -2,30 +2,32 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const morgan = require('morgan')
-const { sequelize, User } = require('./models')
-
 const app = express()
 const config = require('./config/config')
 const path = require('path')
+
+const db = require('./db')
 
 const socket = require('socket.io')
 const io = socket()
 
 io.use( async (socket, next) => {
-  let token = socket.handshake.query.token
-  const user = await User.findOne({
-    where: {
-      token
-    }
-  })
-  if (!user) {
-    console.log('Не получилось авторизовать пользователя!')
-    return next(new Error('authentication error'))
-  } else {
-    user.toJSON().socketId = socket.id
-    socket.user = user.toJSON()
-    next()
-  } 
+  try {
+    let access_token = socket.handshake.query.token
+
+    const query = await db.query("SELECT * FROM \"user\" WHERE access_token = $1", [access_token])
+    let user = query.rows[0]
+    if (!user) {
+      console.log('Не получилось авторизовать пользователя!')
+      return next(new Error('authentication error'))
+    } else {
+      user.socketId = socket.id
+      socket.user = user
+      next()
+    } 
+  } catch (error) {
+    console.log(error)
+  }
 })
 
 app.io = io
@@ -40,21 +42,16 @@ app.use(bodyParser.urlencoded({
 }))
 app.use(cors())
 
-require('./passport')
-require('./cron')
+// require('./passport')
+// require('./cron')
 require('./routes')(app)
 
 app.set('view engine', 'pug')
 app.set('views', path.resolve(__dirname, '../static/htmls'))
 
-sequelize.sync({
-  force: false
+const s = app.listen(config.port, function () {
+  console.log('Application worker ' + process.pid + ' started')
 })
-  .then(() => {
-    const s = app.listen(config.port, function () {
-      console.log('Application worker ' + process.pid + ' started')
-    })
-    io.attach(s)
-    const socketEvents = require('./socket')(io)
-    console.log(`Server started at port ${config.port}`)
-  })
+io.attach(s)
+const socketEvents = require('./socket')(io)
+console.log(`Server started at port ${config.port}`)

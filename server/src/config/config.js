@@ -3,8 +3,8 @@ module.exports = {
   development: {
     dialect: 'postgres',
     host: 'localhost',
-    user: 'root',
-    database: 'chats',
+    user: 'mars',
+    database: 'allawin',
     password: '4dasjoj!dsaioj1233!%dfjknqrq',
     idleTimeoutMillis: 30000,
     operatorsAliases: false,
@@ -14,8 +14,8 @@ module.exports = {
   production: {
     dialect: 'postgres',
     host: 'localhost',
-    user: 'root',
-    database: 'chats',
+    user: 'mars',
+    database: 'allawin',
     password: '4dasjoj!dsaioj1233!%dfjknqrq',
     idleTimeoutMillis: 30000,
     operatorsAliases: false,

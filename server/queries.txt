@@ -1,0 +1,7 @@
+create table message (id serial primary key, text text, status text NOT NULL DEFAULT 'unread', type text, file text, preview1 text, preview2 text, fromid int references "user" (id), roomid int references "order" (id))
+
+ALTER TABLE message OWNER TO mars;
+
+alter table message add column createdAt timestamp not null default now();
+
+alter table message alter column text set not null;
