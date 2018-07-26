@@ -14,7 +14,7 @@ const io = socket()
 io.use( async (socket, next) => {
   try {
     let access_token = socket.handshake.query.token
-
+    console.log(access_token, 17)
     const query = await db.query("SELECT * FROM \"user\" WHERE access_token = $1", [access_token])
     let user = query.rows[0]
     if (!user) {
