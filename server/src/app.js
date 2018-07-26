@@ -42,7 +42,7 @@ app.use(bodyParser.urlencoded({
 app.use(cors({
   "origin": true,
   "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-  "allowedHeaders": "Content-Type,Authorization"
+  "allowedHeaders": "Content-Type,Authorization",
   "preflightContinue": false,
   "optionsSuccessStatus": 204
 }))
