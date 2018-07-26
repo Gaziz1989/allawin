@@ -39,7 +39,7 @@ app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({
   extended: true
 }))
-app.use(cors())
+app.use(cors({origin: '*'}))
 
 // require('./passport')
 // require('./cron')
