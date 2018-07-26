@@ -3,9 +3,9 @@ module.exports = {
   development: {
     dialect: 'postgres',
     host: 'localhost',
-    user: 'mars',
+    user: 'root',
     database: 'allawin',
-    password: '15d0f1db3fd726a7cce0b20316a',
+    password: '4dasjoj!dsaioj1233!%dfjknqrq',
     idleTimeoutMillis: 30000,
     operatorsAliases: false,
     charset: 'utf8',
@@ -14,7 +14,7 @@ module.exports = {
   production: {
     dialect: 'postgres',
     host: 'localhost',
-    user: 'mars',
+    user: 'root',
     database: 'allawin',
     password: '4dasjoj!dsaioj1233!%dfjknqrq',
     idleTimeoutMillis: 30000,
