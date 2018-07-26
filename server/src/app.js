@@ -16,7 +16,6 @@ io.use( async (socket, next) => {
     let access_token = socket.handshake.query.token
     const query = await db.query("SELECT * FROM \"user\" WHERE access_token = $1", [access_token])
     let user = query.rows[0]
-    console.log(user)
     if (!user) {
       console.log('Не получилось авторизовать пользователя!')
       return next(new Error('authentication error'))
@@ -40,7 +39,13 @@ app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({
   extended: true
 }))
-app.use(cors())
+app.use(cors({
+  "origin": true,
+  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+  "allowedHeaders": "Content-Type,Authorization"
+  "preflightContinue": false,
+  "optionsSuccessStatus": 204
+}))
 
 // require('./passport')
 // require('./cron')
