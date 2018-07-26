@@ -68,7 +68,6 @@ let uploadFile = function (_name, _bufer) {
 }
 
 module.exports = (io) => {
-
 	io.on('connection', (socket) => {
 		if (socket.connected) {
 			socket.on('join', async (room) => {
@@ -423,6 +422,7 @@ module.exports = (io) => {
 						socket.broadcast.to(room)
 						.emit('newMessage', {text: `${socket.user.email} leave the room`,
 							from: 'Allawin'})
+						console.log(socket.user.email + ' disconnected from room: ' + room)
 					})
 					// socket.disconnect(0)
 				} catch (error) {

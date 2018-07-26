@@ -6,7 +6,7 @@ const app = express()
 const config = require('./config/config')
 const path = require('path')
 var corsOptions = {
-  origin: ['http://localhost:8080/', 'https://chats.mars.studio/'],
+  origin: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   allowedHeaders: 'Content-Type,Authorization',
   preflightContinue: true,
