@@ -5,18 +5,14 @@ const morgan = require('morgan')
 const app = express()
 const config = require('./config/config')
 const path = require('path')
-var whitelist = ['http://localhost:8080/', 'https://chats.mars.studio/']
 var corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1 || !origin) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  },
-  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-  "preflightContinue": true,
-  "optionsSuccessStatus": 204
+  origin: ['http://localhost:8080/', 'https://chats.mars.studio/'],
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  allowedHeaders: 'Content-Type,Authorization',
+  preflightContinue: true,
+  credentials: true,
+  maxAge: 3600,
+  optionsSuccessStatus: 204
 }
 const db = require('./db')
 
