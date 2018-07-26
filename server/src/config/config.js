@@ -5,7 +5,7 @@ module.exports = {
     host: 'localhost',
     user: 'mars',
     database: 'allawin',
-    password: '4dasjoj!dsaioj1233!%dfjknqrq',
+    password: '15d0f1db3fd726a7cce0b20316a',
     idleTimeoutMillis: 30000,
     operatorsAliases: false,
     charset: 'utf8',
