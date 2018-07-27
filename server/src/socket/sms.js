@@ -19,7 +19,7 @@ let locationCreator = (data) => {
 	if (data.Location.split('//')[0] === 'https:') {
 		return data.Location
 	} else {
-		return `https://${data.Location}/${data.Key}`
+		return `https://${data.Location}`
 	}
 }
 let extChecker = (_array, _ext) => {
@@ -29,22 +29,46 @@ let extChecker = (_array, _ext) => {
 		return false
 	}
 }
-let writeFilePro = function (preview, videoSize, filename) {
-	return new Promise (function (resolve, reject) {
-		preview.setVideoSize(videoSize, true, false).save(filename, (error, file) => {
-			if (error) {
-				reject(error)
-			} else {
-				resolve(file)
-			}
+let writeFilePro = function ( takeScreenShot, preview, size, fullPath, destinationFolder, fileName) {
+	if (takeScreenShot) {
+		return new Promise (function (resolve, reject) {
+			preview.fnExtractFrameToJPG(destinationFolder, {
+				start_time: 15,
+				duration_time: 1,
+				frame_rate: 1,
+				size: size,
+				file_name: fileName
+			}, function (error, files) {
+				if (error) {
+					reject(error)
+				} else {
+					resolve(files)
+				}
+			})
+		}).catch(error => {
+			console.log(error)
+			socket.emit('errorHandle', {
+				text: error
+			})
 		})
-	})
+	} else {
+		return new Promise (function (resolve, reject) {
+			preview.setVideoSize(size, true, false).save(fullPath, (error, file) => {
+				if (error) {
+					reject(error)
+				} else {
+					resolve(file)
+				}
+			})
+		})
+	}
 }
 let readFilePro = function (filename) {
 	return new Promise(function (resolve, reject) {
 		fs.readFile(filename, (error, data) => {
 			if(error) {
 				console.log(error)
+				reject(error)
 			}
 			resolve(new Buffer(data, 'binary'))
 		})
@@ -61,6 +85,7 @@ let uploadFile = function (_name, _bufer) {
 			if (error) {
 				console.log(error)
 			} else {
+				console.log(data)
 				resolve(data)
 			}
 		})
@@ -146,7 +171,7 @@ module.exports = (io) => {
 				try {
 					const _length = file.filename.split('.').length
 					const extension = file.filename.split('.')[_length - 1]
-					const extArray = ['mp3', 'png', 'json', 'docx', 'doc', 'txt', 'rtf', 'docm', 'ppt', 'pptx', 'pptm', 'xps', 'potx', 'potm', 'pot', 'ppsx', 'pps', 'ppa', 'ppam', 'odp', 'pdf', 'xlsx', 'xlsm', 'xlsb', 'xlxt', 'xltm', 'xls', 'xlt', 'xml','xlam','xla','xlw']
+					const extArray = ['json', 'docx', 'doc', 'txt', 'rtf', 'docm', 'ppt', 'pptx', 'pptm', 'xps', 'potx', 'potm', 'pot', 'ppsx', 'pps', 'ppa', 'ppam', 'odp', 'pdf', 'xlsx', 'xlsm', 'xlsb', 'xlxt', 'xltm', 'xls', 'xlt', 'xml','xlam','xla','xlw']
 					if (!extChecker(extArray, extension)) {
 						return socket.emit('errorHandle', {
 							text: 'Формат не поддерживается!'
@@ -162,29 +187,45 @@ module.exports = (io) => {
 						Key: `${uuidv4().split('-').join('')}.${extension}`,
 						Body: file.file,
 						ACL: "public-read"
-					}, function(err, data) {
-						Message.create({
-							text: file.filename,
-							fromId: socket.user.id,
-							roomId: file.room,
-							file: locationCreator(data),
-							type: 'file'
-						}).then(async created => {
-							let message = await Message.findOne({
-								where: {
-									id: created.id
-								},
-								include: [
-								{
-									model: User,
-									as: 'from'
-								}
-								]
-							})
-							delete message.toJSON().from.token
-							delete message.toJSON().from.password
-							io.to(file.room).emit('newMessage', message.toJSON())
-						})
+					}, async function(err, data) {
+						let query = await db.query("INSERT INTO message (text, fromid, roomid, type, file) VALUES ($1, $2, $3, $4, $5) RETURNING id", [file.filename, socket.user.id, file.room, 'file', locationCreator(data)])
+						let query2 = await db.query("SELECT *, msg.id as msg_id FROM message msg INNER JOIN \"user\" usr ON usr.id=msg.fromid INNER JOIN user_profile usr_prf ON usr_prf.user_id=msg.fromid WHERE msg.id=$1;", [query.rows[0].id])
+						let message = {
+							id: query2.rows[0].msg_id,
+							text: query2.rows[0].text,
+							status: query2.rows[0].status,
+							type: query2.rows[0].type,
+							file: query2.rows[0].file,
+							preview1: query2.rows[0].preview1,
+							preview2: query2.rows[0].preview2,
+							fromid: query2.rows[0].fromid,
+							roomid: query2.rows[0].roomid,
+							createdat: query2.rows[0].createdat,
+							from: {
+								username: query2.rows[0].username,
+								email: query2.rows[0].email,
+								curency: query2.rows[0].curency,
+								user_id: query2.rows[0].user_id,
+								firstname: query2.rows[0].firstname,
+								middlename: query2.rows[0].middlename,
+								lastname: query2.rows[0].lastname,
+								avatar_path: query2.rows[0].avatar_path,
+								avatar_base_url: query2.rows[0].avatar_base_url,
+								locale: query2.rows[0].locale,
+								gender: query2.rows[0].gender,
+								is_professional: query2.rows[0].is_professional,
+								subcategory_id: query2.rows[0].subcategory_id,
+								experience: query2.rows[0].experience,
+								bday: query2.rows[0].bday,
+								bio: query2.rows[0].bio,
+								video: query2.rows[0].video,
+								phone: query2.rows[0].phone,
+								city_id: query2.rows[0].city_id,
+								avatar: query2.rows[0].avatar,
+								rating: query2.rows[0].rating
+							}
+						}
+						io.to(file.room).emit('newMessage', message)
 					})
 				} catch (error) {
 					console.log(error)
@@ -198,13 +239,13 @@ module.exports = (io) => {
 				try {
 					const _length = file.filename.split('.').length
 					const extension = file.filename.split('.')[_length - 1]
-					const extArray = ['avi', 'wmv', 'mov', 'asf', 'mpeg', 'mp4']
+					const extArray = ['avi', 'wmv', 'mov', 'asf', 'mpeg', 'mp4', 'MOV']
 					if (!extChecker(extArray, extension)) {
 						return socket.emit('errorHandle', {
 							text: 'Формат не поддерживается!'
 						})
 					}
-					if (file.video.byteLength > 5242880) {
+					if (file.video.byteLength > 10242880) {
 						return socket.emit('errorHandle', {
 							text: 'Файл слишком большой!'
 						})
@@ -221,8 +262,8 @@ module.exports = (io) => {
 							new Promise (function (resolve, reject){
 								const compressor = new ffmpeg(filepath)
 								compressor.then(async (video) => {
-									let _previewpath1 = await writeFilePro(video, '600x400', path.join(__dirname, `../../static/transferedvideos/previews/600_${name}`))
-									let _previewpath2 = await writeFilePro(video, '300x200', path.join(__dirname, `../../static/transferedvideos/previews/300_${name}`))
+									let _previewpath1 = await writeFilePro(true, video, '600x400', path.join(__dirname, `../../static/transferedvideos/previews/600_${name}`), path.join(__dirname, `../../static/transferedvideos/previews/`), `600_${name}`)
+									let _previewpath2 = await writeFilePro(true, video, '300x200', path.join(__dirname, `../../static/transferedvideos/previews/300_${name}`), path.join(__dirname, `../../static/transferedvideos/previews/`), `300_${name}`)
 									resolve({
 										_previewpath1, _previewpath2
 									})
@@ -230,65 +271,80 @@ module.exports = (io) => {
 							})
 							.then(async data => {
 								let bigBuffer = await readFilePro(filepath)
-								let middleBuffer = await readFilePro(data._previewpath1)
-								let smallBuffer = await readFilePro(data._previewpath2)
-								let middleFilePath = data._previewpath1
-								let smallFilePath = data._previewpath2
+								let middleBuffer = await readFilePro(data._previewpath1[0])
+								let smallBuffer = await readFilePro(data._previewpath2[0])
+								let middleFilePath = data._previewpath1[0]
+								let smallFilePath = data._previewpath2[0]
 								return ({
 									bigBuffer, middleBuffer, smallBuffer, middleFilePath, smallFilePath
 								})
 							})
 							.then(async data => {
+								console.log('Here')
 								let big = await uploadFile(name, data.bigBuffer)
 								let middle = await uploadFile('600_' + name, data.middleBuffer)
 								let small = await uploadFile('300_' + name, data.smallBuffer)
-								Message.create({
-									text: file.filename,
-									fromId: socket.user.id,
-									roomId: file.room,
-									file: locationCreator(big),
-									preview1: locationCreator(middle),
-									preview2: locationCreator(small),
-									type: 'video'
-								}).then(async created => {
-									let message = await Message.findOne({
-										where: {
-											id: created.id
-										},
-										include: [
-										{
-											model: User,
-											as: 'from'
-										}
-										]
-									})
-									delete message.toJSON().from.token
-									delete message.toJSON().from.password
-									io.to(file.room).emit('newMessage', message.toJSON())
-									fs.unlink(filepath, (error) => {
-										if (error) {
-											console.log(error)
-											return socket.emit('errorHandle', {
-												text: error
-											})
-										}
-									})
-									fs.unlink(data.middleFilePath, (error) => {
-										if (error) {
-											console.log(error)
-											return socket.emit('errorHandle', {
-												text: error
-											})
-										}
-									})
-									fs.unlink(data.smallFilePath, (error) => {
-										if (error) {
-											console.log(error)
-											return socket.emit('errorHandle', {
-												text: error
-											})
-										}
-									})
+								let query = await db.query("INSERT INTO message (text, fromid, roomid, type, file, preview1, preview2) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id", [file.filename, socket.user.id, file.room, 'video', locationCreator(big), locationCreator(middle), locationCreator(small)])
+								let query2 = await db.query("SELECT *, msg.id as msg_id FROM message msg INNER JOIN \"user\" usr ON usr.id=msg.fromid INNER JOIN user_profile usr_prf ON usr_prf.user_id=msg.fromid WHERE msg.id=$1;", [query.rows[0].id])
+								let message = {
+									id: query2.rows[0].msg_id,
+									text: query2.rows[0].text,
+									status: query2.rows[0].status,
+									type: query2.rows[0].type,
+									file: query2.rows[0].file,
+									preview1: query2.rows[0].preview1,
+									preview2: query2.rows[0].preview2,
+									fromid: query2.rows[0].fromid,
+									roomid: query2.rows[0].roomid,
+									createdat: query2.rows[0].createdat,
+									from: {
+										username: query2.rows[0].username,
+										email: query2.rows[0].email,
+										curency: query2.rows[0].curency,
+										user_id: query2.rows[0].user_id,
+										firstname: query2.rows[0].firstname,
+										middlename: query2.rows[0].middlename,
+										lastname: query2.rows[0].lastname,
+										avatar_path: query2.rows[0].avatar_path,
+										avatar_base_url: query2.rows[0].avatar_base_url,
+										locale: query2.rows[0].locale,
+										gender: query2.rows[0].gender,
+										is_professional: query2.rows[0].is_professional,
+										subcategory_id: query2.rows[0].subcategory_id,
+										experience: query2.rows[0].experience,
+										bday: query2.rows[0].bday,
+										bio: query2.rows[0].bio,
+										video: query2.rows[0].video,
+										phone: query2.rows[0].phone,
+										city_id: query2.rows[0].city_id,
+										avatar: query2.rows[0].avatar,
+										rating: query2.rows[0].rating
+									}
+								}
+								io.to(file.room).emit('newMessage', message)
+								fs.unlink(filepath, (error) => {
+									if (error) {
+										console.log(error)
+										return socket.emit('errorHandle', {
+											text: error
+										})
+									}
+								})
+								fs.unlink(data.middleFilePath, (error) => {
+									if (error) {
+										console.log(error)
+										return socket.emit('errorHandle', {
+											text: error
+										})
+									}
+								})
+								fs.unlink(data.smallFilePath, (error) => {
+									if (error) {
+										console.log(error)
+										return socket.emit('errorHandle', {
+											text: error
+										})
+									}
 								})
 							})
 							.catch(error => {
