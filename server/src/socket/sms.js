@@ -373,7 +373,7 @@ module.exports = (io) => {
 							text: 'Формат не поддерживается!'
 						})
 					}
-					if (file.audio.byteLength > 5242880) {
+					if (file.audio.byteLength > 10242880) {
 						return socket.emit('errorHandle', {
 							text: 'Файл слишком большой!'
 						})
@@ -383,29 +383,68 @@ module.exports = (io) => {
 						Key: `${uuidv4().split('-').join('')}.${extension}`,
 						Body: file.audio,
 						ACL: 'public-read'
-					}, function(err, data) {
-						Message.create({
-							text: file.filename,
-							fromId: socket.user.id,
-							roomId: file.room,
-							file: locationCreator(data),
-							type: 'audio'
-						}).then(async created => {
-							let message = await Message.findOne({
-								where: {
-									id: created.id
-								},
-								include: [
-								{
-									model: User,
-									as: 'from'
-								}
-								]
-							})
-							delete message.toJSON().from.token
-							delete message.toJSON().from.password
-							io.to(file.room).emit('newMessage', message.toJSON())
-						})
+					}, async function(err, data) {
+						console.log(data)
+						let query = await db.query("INSERT INTO message (text, fromid, roomid, type, file) VALUES ($1, $2, $3, $4, $5) RETURNING id", [file.filename, socket.user.id, file.room, 'audio', locationCreator(data)])
+						let query2 = await db.query("SELECT *, msg.id as msg_id FROM message msg INNER JOIN \"user\" usr ON usr.id=msg.fromid INNER JOIN user_profile usr_prf ON usr_prf.user_id=msg.fromid WHERE msg.id=$1;", [query.rows[0].id])
+						let message = {
+							id: query2.rows[0].msg_id,
+							text: query2.rows[0].text,
+							status: query2.rows[0].status,
+							type: query2.rows[0].type,
+							file: query2.rows[0].file,
+							preview1: query2.rows[0].preview1,
+							preview2: query2.rows[0].preview2,
+							fromid: query2.rows[0].fromid,
+							roomid: query2.rows[0].roomid,
+							createdat: query2.rows[0].createdat,
+							from: {
+								username: query2.rows[0].username,
+								email: query2.rows[0].email,
+								curency: query2.rows[0].curency,
+								user_id: query2.rows[0].user_id,
+								firstname: query2.rows[0].firstname,
+								middlename: query2.rows[0].middlename,
+								lastname: query2.rows[0].lastname,
+								avatar_path: query2.rows[0].avatar_path,
+								avatar_base_url: query2.rows[0].avatar_base_url,
+								locale: query2.rows[0].locale,
+								gender: query2.rows[0].gender,
+								is_professional: query2.rows[0].is_professional,
+								subcategory_id: query2.rows[0].subcategory_id,
+								experience: query2.rows[0].experience,
+								bday: query2.rows[0].bday,
+								bio: query2.rows[0].bio,
+								video: query2.rows[0].video,
+								phone: query2.rows[0].phone,
+								city_id: query2.rows[0].city_id,
+								avatar: query2.rows[0].avatar,
+								rating: query2.rows[0].rating
+							}
+						}
+						io.to(file.room).emit('newMessage', message)
+						// Message.create({
+						// 	text: file.filename,
+						// 	fromId: socket.user.id,
+						// 	roomId: file.room,
+						// 	file: locationCreator(data),
+						// 	type: 'audio'
+						// }).then(async created => {
+						// 	let message = await Message.findOne({
+						// 		where: {
+						// 			id: created.id
+						// 		},
+						// 		include: [
+						// 		{
+						// 			model: User,
+						// 			as: 'from'
+						// 		}
+						// 		]
+						// 	})
+						// 	delete message.toJSON().from.token
+						// 	delete message.toJSON().from.password
+						// 	io.to(file.room).emit('newMessage', message.toJSON())
+						// })
 					})
 				} catch (error) {
 					console.log(error)
